@@ -7,6 +7,13 @@ public class InputController : MonoBehaviour
     private InputAction walkAction;
     private InputAction runAction;
 
+    private Vector2 _movementDirection;
+    private bool _isRunPressed;
+
+    // setter and getter
+    public Vector2 MovementDirection { get { return _movementDirection; } set { _movementDirection = value; } }
+    public bool IsRunPressed { get { return _isRunPressed; } set { _isRunPressed = value; } }
+
     void Awake()
     {
         var map = inputActions.FindActionMap("PlayerInput");
@@ -15,15 +22,13 @@ public class InputController : MonoBehaviour
         runAction = map.FindAction("run");
     }
 
-
     void Update()
     {
-        Vector2 move = walkAction.ReadValue<Vector2>();
-        bool run = runAction.IsPressed();
-
-        Debug.Log("move" + move);
-        Debug.Log("run" + run);
+        // update to read input from player
+        _movementDirection = walkAction.ReadValue<Vector2>();
+        _isRunPressed = runAction.IsPressed();
     }
+
 
     void OnEnable()
     {
