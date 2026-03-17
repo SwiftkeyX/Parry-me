@@ -10,18 +10,12 @@ public partial class SetStateAction : Action
 {
     [SerializeReference] public BlackboardVariable<PlayerState> CurrentState;
     [SerializeReference] public BlackboardVariable<PlayerState> NewState;
+
     protected override Status OnStart()
     {
-        return Status.Running;
-    }
-
-    protected override Status OnUpdate()
-    {
+        CurrentState.Value = NewState.Value;
+        Debug.Log("currentstate is set to " + NewState.Value);
         return Status.Success;
-    }
-
-    protected override void OnEnd()
-    {
     }
 }
 
