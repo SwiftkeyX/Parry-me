@@ -1,4 +1,6 @@
+using Unity.AppUI.Core;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -10,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     private bool _run_input;
     Vector3 _moveDirection;
     float _moveSpeed;
+    float _rotationSpeed = 10f;
 
     // readonly
     private readonly float _walkSpeed = 3f;
@@ -43,5 +46,24 @@ public class PlayerMovement : MonoBehaviour
 
         // move the character forward using CharacterController component
         _characterController.Move(_moveDirection * _moveSpeed * Time.deltaTime);
+
+        // rotate character
+        RotateToward();
+    }
+
+    private void RotateToward()
+    {
+        // shutup Unity's console log
+        if (_moveDirection.sqrMagnitude < 0.001f) return;
+
+        // Get target rotation
+        Quaternion targetRotation = Quaternion.LookRotation(_moveDirection);
+
+        // Smoothly rotate
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            targetRotation,
+            _rotationSpeed * Time.deltaTime
+        );
     }
 }
