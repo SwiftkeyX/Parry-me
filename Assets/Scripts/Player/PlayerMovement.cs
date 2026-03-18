@@ -6,15 +6,17 @@ public class PlayerMovement : MonoBehaviour
 {
     private InputController _inputController;
     private CharacterController _characterController;
+    private Animator _animator;
 
     private float _left_right_input;
     private float _up_down_input;
     private bool _run_input;
     Vector3 _moveDirection;
     float _moveSpeed;
-    float _rotationSpeed = 10f;
+    float _rotationSpeed = 20f;
 
     // readonly
+    private readonly float _idleSpeed = 0f;
     private readonly float _walkSpeed = 3f;
     private readonly float _runSpeed = 6f;
 
@@ -27,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
     {
         _inputController = GetComponent<InputController>();
         _characterController = GetComponent<CharacterController>();
+        _animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -40,7 +43,9 @@ public class PlayerMovement : MonoBehaviour
         _moveDirection = new Vector3(0, 0, _left_right_input);
 
         // adjust moveSpeed base on IsPlayerRun
-        if (!_run_input) _moveSpeed = _walkSpeed;
+        if (_moveDirection.sqrMagnitude <= 0.01f) _moveSpeed = _idleSpeed;
+
+        else if (!_run_input) _moveSpeed = _walkSpeed;
 
         else if (_run_input) _moveSpeed = _runSpeed;
 
@@ -49,6 +54,9 @@ public class PlayerMovement : MonoBehaviour
 
         // rotate character
         RotateToward();
+
+        // play movement animation
+        _animator.SetFloat("MoveSpeed", _moveSpeed, 0.1f, Time.deltaTime);
     } 
  
     private void RotateToward()
