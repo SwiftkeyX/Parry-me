@@ -7,16 +7,22 @@ using UnityEngine;
 public partial class PlayerMovementInputExistCondition : Condition
 {
     [SerializeReference] public BlackboardVariable<PlayerMovement> PlayerMovement;
+    float left_right_input;
 
+    // return true if player did insert input
     public override bool IsTrue()
     {
-        return true;
+        if (left_right_input != 0f) return true;
+        
+        return false;
     }
 
     public override void OnStart()
     {
-        float left_right_input = PlayerMovement.Value.Left_Right_input;
-        if (left_right_input != 0f) IsTrue();
+        // get input from player
+        left_right_input = PlayerMovement.Value.Left_Right_input;
+        
+        IsTrue();
     }
 
     public override void OnEnd()
