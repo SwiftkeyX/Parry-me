@@ -21,8 +21,6 @@ public partial class PlayerMovementInputExistCondition : Condition
     {
         // get input from player
         left_right_input = PlayerMovement.Value.Left_Right_input;
-        
-        IsTrue();
     }
 
     public override void OnEnd()
