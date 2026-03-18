@@ -49,8 +49,8 @@ public class PlayerMovement : MonoBehaviour
 
         // rotate character
         RotateToward();
-    }
-
+    } 
+ 
     private void RotateToward()
     {
         // shutup Unity's console log
