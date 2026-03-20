@@ -1,7 +1,6 @@
-using Unity.AppUI.Core;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
+[RequireComponent(typeof(InputController))]
 public class PlayerMovement : MonoBehaviour
 {
     private InputController _inputController;

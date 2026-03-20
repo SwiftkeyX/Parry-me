@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(InputController))]
 public class PlayerCombat : MonoBehaviour
 {
     private InputController _inputController;
@@ -16,8 +17,6 @@ public class PlayerCombat : MonoBehaviour
         // get input 
         bool attackInput = _inputController.IsAttackPressed;
         bool parryInput = _inputController.IsParryPresed;
-
-        Debug.Log(attackInput.ToString());
 
         // play attack animation
         if (attackInput) _animator.SetTrigger("Attack");
