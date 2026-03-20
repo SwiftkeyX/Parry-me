@@ -19,23 +19,50 @@ using UnityEngine;
 /// <summary>
 /// class for create State's instance and give them necessary variable/dependency
 /// </summary>
+[RequireComponent(typeof(StateMachineBlackBoard))]
 public class PlayerStateMachine : MonoBehaviour
 {
-    private CharacterController _characterController;
-    private Animator _animator;
+    private StateMachineBlackBoard _bb;
+    public enum STATE { IDLE, WALK, RUN }
+
+    // state instance
+    private State _idle;
+    private State _walk;
+    private State _run;
+    private State _currentState;
 
     void Awake()
     {
-        _characterController = GetComponent<CharacterController>();
-        _animator = GetComponent<Animator>();
+        _bb = GetComponent<StateMachineBlackBoard>();
     }
 
     void Start()
     {
-
+        _idle = new Idle(_bb);
+        _walk = new Walk(_bb);
+        _run = new Run(_bb);
+        _currentState = _idle;
     }
 
+    void Update()
+    {
+        // update State
+        _currentState.OnUpdate();
+    }
 
+    public State GetCurrentState()
+    {
+        return _currentState;
+    }
+
+    public void ChangeCurrentState(STATE s)
+    {
+        if (s == STATE.IDLE) _currentState = _idle;
+
+        else if (s == STATE.WALK) _currentState = _walk;
+
+        else if (s == STATE.RUN) _currentState = _run;
+    }
 }
 
 /// <summary>
@@ -43,20 +70,33 @@ public class PlayerStateMachine : MonoBehaviour
 /// </summary>
 public abstract class State
 {
+    protected StateMachineBlackBoard _bb;
     protected Animator _animator;
     protected CharacterController _characterController;
 
-    public State(Animator animator, CharacterController characterController) 
+    public State(StateMachineBlackBoard bb)
     {
-        _animator = animator;
-        _characterController = characterController;
+        _bb = bb;
+        _animator = bb.Animator;
+        _characterController = bb.CharacterController;
     }
 
-    public virtual void OnEnter() { }
+    protected virtual void OnEnter() { Debug.Log("Enter to: " + this); }
 
-    public virtual void OnUpdate() { }
+    public virtual void OnUpdate() { CheckSwitchState(); }
 
-    public virtual void OnExit() { }
+    protected virtual void OnExit() { }
+
+    protected virtual void CheckSwitchState()
+    {
+        this.OnExit();
+
+        State newState = _bb.PlayerStateMachine.GetCurrentState();
+
+        Debug.Log("Switch State to: " + newState);
+
+        newState.OnEnter();
+    }
 }
 
 /// <summary>
@@ -65,14 +105,14 @@ public abstract class State
 /// </summary>
 public class Idle : State
 {
-    private float _idleSpeed = 0f;
+    private float _idleSpeed;
 
-    public Idle(Animator animator, CharacterController characterController): base(animator, characterController)
+    public Idle(StateMachineBlackBoard bb, float moveSpeed = 0f) : base(bb)
     {
-        
+        _idleSpeed = moveSpeed;
     }
 
-    public override void OnEnter()
+    protected override void OnEnter()
     {
         base.OnEnter();
         _animator.SetFloat("MoveSpeed", _idleSpeed, 0.1f, Time.deltaTime);
@@ -83,34 +123,98 @@ public class Idle : State
         base.OnUpdate();
 
     }
+
+    protected override void CheckSwitchState()
+    {
+        Debug.Log("MoveDirection from Idle: " + _bb.InputProcessor.MoveDirection);
+
+        if (_bb.InputProcessor.MoveDirection.sqrMagnitude > 0f)
+        {
+            _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.WALK);
+        }
+
+        base.CheckSwitchState();
+    }
 }
 
 public class Walk : State
 {
-    public override void OnEnter()
+    private float _walkSpeed;
+    private float _rotationSpeed;
+
+    public Walk(StateMachineBlackBoard bb, float moveSpeed = 3f, float rotationSpeed = 20f) : base(bb)
+    {
+        _walkSpeed = moveSpeed;
+        _rotationSpeed = rotationSpeed;
+    }
+
+    protected override void OnEnter()
     {
         base.OnEnter();
-        _animator.SetFloat("MoveSpeed", _moveSpeed, 0.1f, Time.deltaTime);
+        _animator.SetFloat("MoveSpeed", _walkSpeed, 0.1f, Time.deltaTime);
     }
 
     public override void OnUpdate()
     {
         base.OnUpdate();
 
+        _bb.CharacterController.Move(_bb.InputProcessor.MoveDirection * _walkSpeed * Time.deltaTime);
+
+        RotateTowardMoveDirection();
+    }
+
+    protected override void CheckSwitchState()
+    {
+        if (_bb.InputProcessor.MoveDirection.sqrMagnitude == 0f)
+        {
+            _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.IDLE);
+        }
+
+        base.CheckSwitchState();
+    }
+
+    private void RotateTowardMoveDirection()
+    {
+        // shutup Unity's console log
+        if (_bb.InputProcessor.MoveDirection.sqrMagnitude < 0.001f) return;
+
+        // Get target rotation
+        Quaternion targetRotation = Quaternion.LookRotation(_bb.InputProcessor.MoveDirection);
+
+        // Smoothly rotate
+        _bb.transform.rotation = Quaternion.Slerp(
+            _bb.transform.rotation,
+            targetRotation,
+            _rotationSpeed * Time.deltaTime
+        );
     }
 }
 
 public class Run : State
 {
-    public override void OnEnter()
+    private float _runSpeed;
+
+    public Run(StateMachineBlackBoard bb, float moveSpeed = 6f) : base(bb)
+    {
+        _runSpeed = moveSpeed;
+    }
+
+
+    protected override void OnEnter()
     {
         base.OnEnter();
-        _animator.SetFloat("MoveSpeed", _moveSpeed, 0.1f, Time.deltaTime);
+        _animator.SetFloat("MoveSpeed", _runSpeed, 0.1f, Time.deltaTime);
     }
 
     public override void OnUpdate()
     {
         base.OnUpdate();
 
+    }
+
+    protected override void CheckSwitchState()
+    {
+
+        base.CheckSwitchState();
     }
 }
