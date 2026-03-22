@@ -24,6 +24,11 @@ public abstract class State
 
     protected virtual void CheckSwitchState()
     {
+
+    }
+
+    protected void SwitchState()
+    {
         this.OnExit();
 
         State newState = _bb.PlayerStateMachine.GetCurrentState();

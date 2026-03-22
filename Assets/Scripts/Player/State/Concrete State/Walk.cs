@@ -14,12 +14,13 @@ public class Walk : State
     protected override void OnEnter()
     {
         base.OnEnter();
-        _animator.SetFloat("MoveSpeed", _walkSpeed, 0.1f, Time.deltaTime);
     }
 
     public override void OnUpdate()
     {
         base.OnUpdate();
+
+        _animator.SetFloat("MoveSpeed", _walkSpeed, 0.1f, Time.deltaTime);
 
         _bb.CharacterController.Move(_bb.InputProcessor.MoveDirection * _walkSpeed * Time.deltaTime);
 
@@ -31,19 +32,21 @@ public class Walk : State
         if (_bb.InputProcessor.Attack_input)
         {
             _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.ATTACK);
+            base.SwitchState();
         }
 
         else if (_bb.InputProcessor.MoveDirection.sqrMagnitude == 0f)
         {
             _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.IDLE);
+            base.SwitchState();
         }
 
         else if (_bb.InputProcessor.MoveDirection.sqrMagnitude > 0f && _bb.InputProcessor.Run_input)
         {
             _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.RUN);
+            base.SwitchState();
         }
 
-        base.CheckSwitchState();
     }
 
     private void RotateTowardMoveDirection()

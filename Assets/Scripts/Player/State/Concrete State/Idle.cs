@@ -16,13 +16,13 @@ public class Idle : State
     protected override void OnEnter()
     {
         base.OnEnter();
-        _animator.SetFloat("MoveSpeed", _idleSpeed, 0.1f, Time.deltaTime);
     }
 
     public override void OnUpdate()
     {
         base.OnUpdate();
-
+        
+        _animator.SetFloat("MoveSpeed", _idleSpeed, 0.1f, Time.deltaTime);
     }
 
     protected override void CheckSwitchState()
@@ -30,18 +30,20 @@ public class Idle : State
         if (_bb.InputProcessor.Attack_input)
         {
             _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.ATTACK);
+            base.SwitchState();
         }
 
         else if (_bb.InputProcessor.MoveDirection.sqrMagnitude > 0f && !_bb.InputProcessor.Run_input)
         {
             _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.WALK);
+            base.SwitchState();
         }
 
         else if (_bb.InputProcessor.MoveDirection.sqrMagnitude > 0f && _bb.InputProcessor.Run_input)
         {
             _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.RUN);
+            base.SwitchState();
         }
 
-        base.CheckSwitchState();
     }
 }
