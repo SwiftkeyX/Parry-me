@@ -31,10 +31,10 @@ MonoBehaviour:
         BlackboardReference:
           rid: 1867287546551074817
         BlackboardGroupReferences:
-        - rid: 1867287813013111173
+        - rid: 1867287862976184420
         Root:
-          rid: 1867287813013111174
-        m_VersionTimestamp: 639094337400438039
+          rid: 1867287862976184421
+        m_VersionTimestamp: 639096211614024563
     - rid: 1867287546551074817
       type: {class: BlackboardReference, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -117,13 +117,13 @@ MonoBehaviour:
           m_Value1: 9301780613630472876
         Name: meleeRange
         m_Value: 2
-    - rid: 1867287813013111173
+    - rid: 1867287862976184420
       type: {class: BlackboardReference, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         m_Blackboard:
-          rid: 1867287813013111175
+          rid: 1867287862976184422
         m_Source: {fileID: 8103474684435000124, guid: 173993b46be4a844d804a89a3606cae9, type: 2}
-    - rid: 1867287813013111174
+    - rid: 1867287862976184421
       type: {class: Start, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -134,15 +134,15 @@ MonoBehaviour:
         m_Parent:
           rid: -2
         m_Child:
-          rid: 1867287813013111176
+          rid: 1867287862976184423
         Repeat: 0
         AllowMultipleRepeatsPerTick: 0
-    - rid: 1867287813013111175
+    - rid: 1867287862976184422
       type: {class: Blackboard, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         m_Variables:
-        - rid: 1867287813013111177
-    - rid: 1867287813013111176
+        - rid: 1867287862976184424
+    - rid: 1867287862976184423
       type: {class: SequenceComposite, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -151,11 +151,11 @@ MonoBehaviour:
         Graph:
           rid: 1867287546551074816
         m_Parent:
-          rid: 1867287813013111174
+          rid: 1867287862976184421
         m_Children:
-        - rid: 1867287813013111178
+        - rid: 1867287862976184425
         m_RegisteredObservers: []
-    - rid: 1867287813013111177
+    - rid: 1867287862976184424
       type: {class: 'SharedBlackboardVariable`1[[System.String, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -164,7 +164,7 @@ MonoBehaviour:
         Name: MoveSpeed
         m_Value: 
         m_SharedVariablesRuntimeAsset: {fileID: 8103474684435000124, guid: 173993b46be4a844d804a89a3606cae9, type: 2}
-    - rid: 1867287813013111178
+    - rid: 1867287862976184425
       type: {class: RepeaterModifier, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -173,7 +173,7 @@ MonoBehaviour:
         Graph:
           rid: 1867287546551074816
         m_Parent:
-          rid: 1867287813013111176
+          rid: 1867287862976184423
         m_Child:
           rid: -2
         m_AllowMultipleRepeatsPerTick: 0
@@ -413,7 +413,7 @@ MonoBehaviour:
   - rid: 1867287813013110899
   - rid: 1867287813013110900
   - rid: 1867287813013110901
-  m_VersionTimestamp: 639094337400438039
+  m_VersionTimestamp: 639096211614024563
   m_SerializedVersion: 2
   m_DebugInfo: {fileID: 8379309165826262601}
   m_RuntimeGraph: {fileID: -6337488306619503664}
@@ -676,19 +676,7 @@ MonoBehaviour:
           m_Value0: 12334964803190848789
           m_Value1: 14608808926743427008
         m_FieldValues: []
-        <ConditionModels>k__BackingField:
-        - ConditionType:
-            m_SerializableType: PlayerMovementInputExistCondition, Assembly-CSharp,
-              Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-          ConditionTypeID:
-            m_Value0: 6839234790996641268
-            m_Value1: 15950241589589529128
-          NodeModel:
-            rid: 1867287796753367194
-          m_FieldValues:
-          - rid: 1867287796753367210
-          OperatorFieldModel:
-            rid: -2
+        <ConditionModels>k__BackingField: []
         <RequiresAllConditionsTrue>k__BackingField: 0
         <ShouldTruncateNodeUI>k__BackingField: 0
         <ObserverType>k__BackingField: 0
@@ -761,35 +749,6 @@ MonoBehaviour:
           rid: 1867287796753367194
         m_Connections:
         - rid: 1867287796753367197
-    - rid: 1867287796753367210
-      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
-      data:
-        FieldName: PlayerMovement
-        Type:
-          m_SerializableType: PlayerMovement, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-            PublicKeyToken=null
-        LocalValue:
-          rid: 1867287796753367212
-        LinkedVariable:
-          rid: 1867287796753367221
-    - rid: 1867287796753367212
-      type: {class: 'BlackboardVariable`1[[PlayerMovement, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 0
-          m_Value1: 0
-        Name: 
-        m_Value: {fileID: 0}
-    - rid: 1867287796753367221
-      type: {class: 'TypedVariableModel`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
-      data:
-        ID:
-          m_Value0: 1
-          m_Value1: 0
-        Name: Self
-        IsExposed: 1
-        m_IsShared: 0
-        m_Value: {fileID: 0}
     - rid: 1867287796753367295
       type: {class: ActionNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
@@ -1180,19 +1139,7 @@ MonoBehaviour:
           m_Value0: 12334964803190848789
           m_Value1: 14608808926743427008
         m_FieldValues: []
-        <ConditionModels>k__BackingField:
-        - ConditionType:
-            m_SerializableType: IsPlayerDoRunInputCondition, Assembly-CSharp, Version=0.0.0.0,
-              Culture=neutral, PublicKeyToken=null
-          ConditionTypeID:
-            m_Value0: 6793507754587075499
-            m_Value1: 5666428339905399115
-          NodeModel:
-            rid: 1867287813013110901
-          m_FieldValues:
-          - rid: 1867287813013110957
-          OperatorFieldModel:
-            rid: -2
+        <ConditionModels>k__BackingField: []
         <RequiresAllConditionsTrue>k__BackingField: 0
         <ShouldTruncateNodeUI>k__BackingField: 0
         <ObserverType>k__BackingField: 0
@@ -1266,35 +1213,6 @@ MonoBehaviour:
           rid: 1867287813013110901
         m_Connections:
         - rid: 1867287813013110904
-    - rid: 1867287813013110957
-      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
-      data:
-        FieldName: PlayerMovement
-        Type:
-          m_SerializableType: PlayerMovement, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-            PublicKeyToken=null
-        LocalValue:
-          rid: 1867287813013110958
-        LinkedVariable:
-          rid: 1867287813013110959
-    - rid: 1867287813013110958
-      type: {class: 'BlackboardVariable`1[[PlayerMovement, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 0
-          m_Value1: 0
-        Name: 
-        m_Value: {fileID: 0}
-    - rid: 1867287813013110959
-      type: {class: 'TypedVariableModel`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
-      data:
-        ID:
-          m_Value0: 1
-          m_Value1: 0
-        Name: Self
-        IsExposed: 1
-        m_IsShared: 0
-        m_Value: {fileID: 0}
 --- !u!114 &8379309165826262601
 MonoBehaviour:
   m_ObjectHideFlags: 0
