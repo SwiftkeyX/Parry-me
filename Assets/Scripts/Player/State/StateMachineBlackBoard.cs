@@ -17,6 +17,7 @@ public class StateMachineBlackBoard : MonoBehaviour
     private Animator _animator;
     private InputController _inputController;
     private InputProcessor _inputProcessor;
+    private AttackComboData _attackComboData;
 
     // setter and getter
     public PlayerStateMachine PlayerStateMachine { get { return _playerStateMachine; } }
@@ -24,6 +25,7 @@ public class StateMachineBlackBoard : MonoBehaviour
     public Animator Animator { get { return _animator; } }
     public InputController InputController { get { return _inputController; } }
     public InputProcessor InputProcessor { get { return _inputProcessor; } }
+    public AttackComboData AttackComboData { get { return _attackComboData; } }
 
     void Awake()
     {
@@ -31,6 +33,7 @@ public class StateMachineBlackBoard : MonoBehaviour
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
         _inputController = GetComponent<InputController>();
+        _attackComboData = GetComponent<AttackComboData>();
         _inputProcessor = new InputProcessor(_inputController);
     }
 

@@ -123,15 +123,13 @@ public class Attack : State
     {
         base.OnEnter();
 
-        _bb.Animator.SetTrigger("Attack");
-
     }
 
     public override void OnUpdate()
     {
         base.OnUpdate();
 
-
+        if (_bb.InputProcessor.Attack_input) _bb.AttackComboData.Attack();
     }
 
     protected override void OnExit()
@@ -140,6 +138,7 @@ public class Attack : State
 
     protected override void CheckSwitchState()
     {
+        if (!_bb.AttackComboData.IsAttackFinish()) return;
 
         if (_bb.InputProcessor.MoveDirection.sqrMagnitude == 0f)
         {
