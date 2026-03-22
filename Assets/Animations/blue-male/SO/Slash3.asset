@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animOV: {fileID: 22100000, guid: 0d7601157d23ef849b0897e958d4856e, type: 2}
   dmg: 10
+  chainAttack: 0
