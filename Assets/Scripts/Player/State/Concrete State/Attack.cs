@@ -29,7 +29,7 @@ public class Attack : State
 
     protected override void CheckSwitchState()
     {
-        if (!_bb.AttackComboData.IsAttackFinish()) return;
+        if (!_bb.AttackComboData.IsAttackFinish) return;
 
         if (_bb.InputProcessor.MoveDirection.sqrMagnitude == 0f)
         {

@@ -21,8 +21,13 @@ public class AttackComboData : MonoBehaviour
     private float _timer;
 
     // debug
-    [SerializeField] private bool debugMode;
-    [SerializeField] private TextMeshProUGUI debug_textUI;
+    public bool debugMode;
+
+    // getter and setter
+    public int ComboNumber => _comboNumber;
+    public bool IsAttackFinish => _isAttackFinish;
+    public Coroutine GetAttackTimer => _attackTimer;
+    public float Timer => _timer;
 
     void Awake()
     {
@@ -34,20 +39,11 @@ public class AttackComboData : MonoBehaviour
         _comboNumber = 0;
         _lastClickedTime = Time.time;
         _isAttackFinish = true;
-
-        if (!debugMode) debug_textUI.enabled = false;
     }
 
     void Update()
     {
-        // debug
-        if (debugMode)
-        {
-            debug_textUI.text
-            = "timer: " + _timer.ToString("F3") + "\n" +
-            "ComboNumber: " + _comboNumber + "\n" +
-            "IsAttackFinish: " + _isAttackFinish;
-        }
+
     }
 
     // logic to allow the current attack to chain to next attack
@@ -83,8 +79,6 @@ public class AttackComboData : MonoBehaviour
         _comboNumber = 0;
         _isAttackFinish = true;
     }
-
-    public bool IsAttackFinish() => _isAttackFinish;
 
     // attack timer => to allow/not allow player from exiting attack state
     private IEnumerator AttackTimer(float t)
