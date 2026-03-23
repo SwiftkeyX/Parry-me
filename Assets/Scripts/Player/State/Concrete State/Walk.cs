@@ -5,7 +5,7 @@ public class Walk : State
     private float _walkSpeed;
     private float _rotationSpeed;
 
-    public Walk(StateMachineBlackBoard bb, float moveSpeed = 3f, float rotationSpeed = 20f) : base(bb)
+    public Walk(StateMachineBlackBoard bb, float moveSpeed = 3f, float rotationSpeed = 180f) : base(bb)
     {
         _walkSpeed = moveSpeed;
         _rotationSpeed = rotationSpeed;

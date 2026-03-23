@@ -5,7 +5,7 @@ public class Run : State
     private float _runSpeed;
     private float _rotationSpeed;
 
-    public Run(StateMachineBlackBoard bb, float moveSpeed = 6f, float rotationSpeed = 20f) : base(bb)
+    public Run(StateMachineBlackBoard bb, float moveSpeed = 6f, float rotationSpeed = 180f) : base(bb)
     {
         _runSpeed = moveSpeed;
         _rotationSpeed = rotationSpeed;

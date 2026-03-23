@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 /// <summary>
@@ -15,6 +17,12 @@ public class AttackComboData : MonoBehaviour
     private float _lastClickedTime;
     private bool _isAttackFinish;
     private float _animationFinish = 0.9f;
+    private Coroutine _attackTimer;
+    private float _timer;
+
+    // debug
+    [SerializeField] private bool debugMode;
+    [SerializeField] private TextMeshProUGUI debug_textUI;
 
     void Awake()
     {
@@ -26,11 +34,20 @@ public class AttackComboData : MonoBehaviour
         _comboNumber = 0;
         _lastClickedTime = Time.time;
         _isAttackFinish = true;
+
+        if (!debugMode) debug_textUI.enabled = false;
     }
 
     void Update()
     {
-        UpdateAttackTimer();
+        // debug
+        if (debugMode)
+        {
+            debug_textUI.text
+            = "timer: " + _timer.ToString("F3") + "\n" +
+            "ComboNumber: " + _comboNumber + "\n" +
+            "IsAttackFinish: " + _isAttackFinish;
+        }
     }
 
     // logic to allow the current attack to chain to next attack
@@ -41,13 +58,15 @@ public class AttackComboData : MonoBehaviour
         // calculate attack buffer
         bool isAttackBuffer;
         if (_comboNumber == 0) isAttackBuffer = true;
-        else isAttackBuffer = (Time.time - _lastClickedTime >= _attackSO[_comboNumber-1].chainAttack);
+        else isAttackBuffer = (Time.time - _lastClickedTime >= _attackSO[_comboNumber - 1].chainAttack);
 
         // play attack animation
         if (isAttackBuffer)
         {
-            // in case the invoke is fired, cancel invoke called if the player continue attack
-            CancelInvoke("AttackEnd");
+            // start the attack timer, if timer is run out => call AttackEnd()
+            // reset the attack timer, if player continue attack => AttackEnd() won't be called  
+            if (_attackTimer != null) StopCoroutine(_attackTimer);
+            _attackTimer = StartCoroutine(AttackTimer(_attackSO[_comboNumber].attackTimer));
 
             _animator.runtimeAnimatorController = _attackSO[_comboNumber].animOV;
             _animator.CrossFade("Attack", 0.1f, 0, 0f);
@@ -65,16 +84,22 @@ public class AttackComboData : MonoBehaviour
         _isAttackFinish = true;
     }
 
-    // timer to count if the attack should be finish
-    private void UpdateAttackTimer()
-    {
-        bool isAttackAnimationEnd = _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= _animationFinish;
-        bool isInAttack = _animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack");
+    public bool IsAttackFinish() => _isAttackFinish;
 
-        // call AttackEnd() 1 sec after the attack animation is finished
-        if (isAttackAnimationEnd && isInAttack) Invoke("AttackEnd", 0.6f);
+    // attack timer => to allow/not allow player from exiting attack state
+    private IEnumerator AttackTimer(float t)
+    {
+        _timer = t;
+
+        while (_timer > 0f)
+        {
+            _timer -= Time.deltaTime;
+
+            yield return null;
+        }
+
+        AttackEnd();
     }
 
-    public bool IsAttackFinish() => _isAttackFinish;
 }
 
