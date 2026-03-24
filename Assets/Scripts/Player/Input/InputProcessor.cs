@@ -12,6 +12,7 @@ public class InputProcessor
     private float _up_down_input;
     private bool _run_input;
     private bool _attack_input;
+    private bool _jump_input;
     private Vector3 _moveDirection;
 
     // setter and getter
@@ -19,6 +20,7 @@ public class InputProcessor
     public float Up_Down_input { get { return _up_down_input; } }
     public bool Run_input { get { return _run_input; } }
     public bool Attack_input { get { return _attack_input; } }
+    public bool Jump_input { get { return _jump_input; } }
     public Vector3 MoveDirection { get { return _moveDirection; } }
 
     public InputProcessor(InputController inputController)
@@ -32,6 +34,7 @@ public class InputProcessor
         _up_down_input = _inputController.MovementDirection.y;
         _run_input = _inputController.IsRunPressed;
         _attack_input = _inputController.IsAttackPressed;
+        _jump_input = _inputController.IsJumpPressed;
     }
 
     public void ProcessInput()

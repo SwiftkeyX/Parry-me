@@ -1,41 +1,43 @@
 using UnityEngine;
 
-/// <summary>
-/// all the concrete state that inherit from base state
-/// which include Idle/ Walk/ Run/ Attack/ Grounded/ Airborne/ etc..
-/// </summary>
-public class Idle : State
+public class Jump : State
 {
-    private float _idleSpeed;
+    private float _jumpSpeed;
 
-    public Idle(StateMachineBlackBoard bb, float moveSpeed = 0f) : base(bb)
+    public Jump(StateMachineBlackBoard bb, float jumpSpeed = 10f) : base(bb)
     {
-        _idleSpeed = moveSpeed;
+        _jumpSpeed = jumpSpeed;
     }
 
     protected override void OnEnter()
     {
         base.OnEnter();
+
+        // _animator.SetTrigger("Jump");
     }
 
     public override void OnUpdate()
     {
         base.OnUpdate();
 
-        _animator.SetFloat("MoveSpeed", _idleSpeed, 0.1f, Time.deltaTime);
+        Vector3 jumpDirection = new Vector3(_bb.InputProcessor.MoveDirection.x, 1, _bb.InputProcessor.MoveDirection.z);
+
+        _bb.CharacterController.Move(jumpDirection * _jumpSpeed * Time.deltaTime);
     }
 
     protected override void CheckSwitchState()
     {
+        if (!_characterController.isGrounded) return;
+
         if (_bb.InputProcessor.Attack_input)
         {
             _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.ATTACK);
             base.SwitchState();
         }
 
-        else if (_bb.InputProcessor.Jump_input)
+        else if (_bb.InputProcessor.MoveDirection.sqrMagnitude == 0f)
         {
-            _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.JUMP);
+            _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.IDLE);
             base.SwitchState();
         }
 
@@ -50,5 +52,7 @@ public class Idle : State
             _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.RUN);
             base.SwitchState();
         }
+
     }
+
 }

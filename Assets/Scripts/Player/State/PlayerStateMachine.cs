@@ -23,12 +23,13 @@ using UnityEngine;
 public class PlayerStateMachine : MonoBehaviour
 {
     private StateMachineBlackBoard _bb;
-    public enum STATE { IDLE, WALK, RUN, ATTACK }
+    public enum STATE { IDLE, WALK, RUN, JUMP, ATTACK }
 
     // state instance
     private State _idle;
     private State _walk;
     private State _run;
+    private State _jump;
     private State _attack;
     private State _currentState;
 
@@ -42,6 +43,7 @@ public class PlayerStateMachine : MonoBehaviour
         _idle = new Idle(_bb);
         _walk = new Walk(_bb);
         _run = new Run(_bb);
+        _jump = new Jump(_bb);
         _attack = new Attack(_bb);
         _currentState = _idle;
     }
@@ -65,7 +67,11 @@ public class PlayerStateMachine : MonoBehaviour
 
         else if (s == STATE.RUN) _currentState = _run;
 
+        else if (s == STATE.JUMP) _currentState = _jump;
+        
         else if (s == STATE.ATTACK) _currentState = _attack;
+
+
     }
 }
 

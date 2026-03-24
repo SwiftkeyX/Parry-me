@@ -35,6 +35,12 @@ public class Walk : State
             base.SwitchState();
         }
 
+        else if (_bb.InputProcessor.Jump_input)
+        {
+            _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.JUMP);
+            base.SwitchState();
+        }
+
         else if (_bb.InputProcessor.MoveDirection.sqrMagnitude == 0f)
         {
             _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.IDLE);
