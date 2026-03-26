@@ -33,6 +33,14 @@ public class PlayerStateMachine : MonoBehaviour
     private State _attack;
     private State _currentState;
 
+    [Header("Adjust Player Stat")]
+    public float WalkSpeed = 3f;
+    public float RunSpeed = 6f;
+    public float JumpSpeed = 1f;
+
+    [Header("Debug")]
+    public bool Debug = false;
+
     void Awake()
     {
         _bb = GetComponent<StateMachineBlackBoard>();
@@ -41,9 +49,9 @@ public class PlayerStateMachine : MonoBehaviour
     void Start()
     {
         _idle = new Idle(_bb);
-        _walk = new Walk(_bb);
-        _run = new Run(_bb);
-        _jump = new Jump(_bb);
+        _walk = new Walk(_bb, WalkSpeed);
+        _run = new Run(_bb, RunSpeed);
+        _jump = new Jump(_bb, JumpSpeed);
         _attack = new Attack(_bb);
         _currentState = _idle;
     }
@@ -68,7 +76,7 @@ public class PlayerStateMachine : MonoBehaviour
         else if (s == STATE.RUN) _currentState = _run;
 
         else if (s == STATE.JUMP) _currentState = _jump;
-        
+
         else if (s == STATE.ATTACK) _currentState = _attack;
 
 

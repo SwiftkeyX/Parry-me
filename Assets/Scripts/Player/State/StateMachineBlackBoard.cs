@@ -12,20 +12,35 @@ using UnityEngine;
 /// </summary>
 public class StateMachineBlackBoard : MonoBehaviour
 {
+    // component var
     private PlayerStateMachine _playerStateMachine;
     private CharacterController _characterController;
     private Animator _animator;
     private InputController _inputController;
     private InputProcessor _inputProcessor;
     private AttackComboData _attackComboData;
+    private Gravity _gravity;
 
-    // setter and getter
+    // ============================== other var ==============================================
+    // movement var
+    private float _verticalMovement;
+
+    // ============================== setter and getter ==============================
+    // component getter
     public PlayerStateMachine PlayerStateMachine { get { return _playerStateMachine; } }
     public CharacterController CharacterController { get { return _characterController; } }
     public Animator Animator { get { return _animator; } }
     public InputController InputController { get { return _inputController; } }
     public InputProcessor InputProcessor { get { return _inputProcessor; } }
     public AttackComboData AttackComboData { get { return _attackComboData; } }
+    public Gravity Gravity { get { return _gravity; } }
+    // movement getter
+    public float VerticalMovement { get { return _verticalMovement; } set { _verticalMovement = value; } }
+
+
+    // ============================== debug ==============================
+    public bool Debug_chracterController = false;
+
 
     void Awake()
     {
@@ -34,7 +49,9 @@ public class StateMachineBlackBoard : MonoBehaviour
         _animator = GetComponent<Animator>();
         _inputController = GetComponent<InputController>();
         _attackComboData = GetComponent<AttackComboData>();
+        _gravity = GetComponent<Gravity>();
         _inputProcessor = new InputProcessor(_inputController);
+
     }
 
     void Update()
@@ -42,5 +59,20 @@ public class StateMachineBlackBoard : MonoBehaviour
         // basically calculate which direction player move to
         _inputProcessor.GetInput();
         _inputProcessor.ProcessInput();
+
+        DebugManage();
+    }
+
+    void DebugManage()
+    {
+        if (_playerStateMachine.Debug)
+        {
+            Debug.Log("verticalMovement: " + _verticalMovement);
+        }
+
+        if (Debug_chracterController)
+        {
+            Debug.Log("CC is grounded: " + _characterController.isGrounded);
+        }
     }
 }

@@ -1,33 +1,46 @@
 using UnityEngine;
 
+/// <summary>
+/// include Jump and Falling animation
+/// </summary>
 public class Jump : State
 {
-    private float _jumpSpeed;
+    private float _jumpForce;
+    private bool _jumpOnce;
 
-    public Jump(StateMachineBlackBoard bb, float jumpSpeed = 10f) : base(bb)
+    public Jump(StateMachineBlackBoard bb, float jumpForce = 1f) : base(bb)
     {
-        _jumpSpeed = jumpSpeed;
+        _jumpForce = jumpForce;
     }
 
     protected override void OnEnter()
     {
         base.OnEnter();
 
-        // _animator.SetTrigger("Jump");
+        _animator.CrossFade("jump", 0.1f);
+        
+        _animator.SetBool("Grounded", false);
+
+        _jumpOnce = false;
     }
 
     public override void OnUpdate()
     {
         base.OnUpdate();
 
-        Vector3 jumpDirection = new Vector3(_bb.InputProcessor.MoveDirection.x, 1, _bb.InputProcessor.MoveDirection.z);
+        DoTheJump();
+    }
 
-        _bb.CharacterController.Move(jumpDirection * _jumpSpeed * Time.deltaTime);
+    protected override void OnExit()
+    {
+        base.OnExit();
+
+        _animator.SetBool("Grounded", true);
     }
 
     protected override void CheckSwitchState()
     {
-        if (!_characterController.isGrounded) return;
+        if (!_jumpOnce || !_characterController.isGrounded) return;
 
         if (_bb.InputProcessor.Attack_input)
         {
@@ -55,4 +68,18 @@ public class Jump : State
 
     }
 
+    private void DoTheJump()
+    {
+        if (_jumpOnce) return;
+
+        AnimatorStateInfo info = _animator.GetCurrentAnimatorStateInfo(0);
+        bool inJumpAnimatorState = info.IsTag("Jump");
+        bool inJumpWindow = (info.normalizedTime > 0.1);
+
+        if (inJumpWindow && inJumpAnimatorState)
+        {
+            _bb.VerticalMovement = _jumpForce;
+            _jumpOnce = true;
+        }
+    }
 }
