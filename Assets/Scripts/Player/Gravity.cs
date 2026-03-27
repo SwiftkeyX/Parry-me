@@ -6,7 +6,9 @@ using UnityEngine;
 /// Role?
 /// 1.apply gravity manually because we mainly use CharacterController
 /// 2.calculate appropriate jump height
+/// 3.calculate appropriate gravity
 /// </summary>
+[RequireComponent(typeof(PlayerStateMachine))]
 public class Gravity : MonoBehaviour
 {
     // dependency
@@ -14,24 +16,28 @@ public class Gravity : MonoBehaviour
     private PlayerStateMachine _playerStateMachine;
 
     // necessary var
-    private float _airborneGravityForce = -9.8f;
+    private float _airborneGravityForce;
     private float _groundedGravityForce = -1f;
-    private bool _isFalling;
     private float _fallMultiplier = 2f;
 
     void Awake()
     {
         _characterController = GetComponent<CharacterController>();
         _playerStateMachine = GetComponent<PlayerStateMachine>();
+        CalculateJumpHeight();
     }
 
-    void Update()
+    private void CalculateJumpHeight()
     {
-        ApplyGravity();
+        float timeToHighest = _playerStateMachine.MaxJumpTime / 2;
+        _airborneGravityForce = (-2 * _playerStateMachine.MaxJumpHeight) / Mathf.Pow(timeToHighest, 2);
+        _playerStateMachine.InitialJumpVelocity = (2 * _playerStateMachine.MaxJumpHeight) / timeToHighest;
     }
 
-    private void ApplyGravity()
+    public void ApplyGravity()
     {
+        bool isFalling = (_playerStateMachine.Movement.y < 0);
+
         // character on the ground
         if (_characterController.isGrounded)
         {
@@ -39,7 +45,7 @@ public class Gravity : MonoBehaviour
         }
 
         // character is airbone and falling downward
-        else if (_isFalling)
+        else if (isFalling)
         {
             float previousYVelocity = _playerStateMachine.MovementMultiplierY;
             float newYVelocity = _playerStateMachine.MovementMultiplierY + (_airborneGravityForce * _fallMultiplier * Time.deltaTime);

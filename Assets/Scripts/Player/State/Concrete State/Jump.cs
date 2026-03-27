@@ -78,7 +78,7 @@ public class Jump : State
 
         if (inJumpWindow && inJumpAnimatorState)
         {
-            _playerStateMachine.MovementMultiplierY = _jumpForce;
+            _playerStateMachine.MovementMultiplierY = _jumpForce / 2f;
             _jumpOnce = true;
         }
     }

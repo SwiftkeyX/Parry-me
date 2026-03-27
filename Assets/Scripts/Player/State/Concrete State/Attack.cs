@@ -24,6 +24,9 @@ public class Attack : State
         base.OnUpdate();
 
         if (_playerStateMachine.AttackInput) _attackComboData.Attack();
+
+        // player don't move when attacking
+        _playerStateMachine.MovementMultiplierX = 0f;
     }
 
     protected override void OnExit()

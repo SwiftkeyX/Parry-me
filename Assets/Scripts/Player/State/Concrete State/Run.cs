@@ -36,6 +36,13 @@ public class Run : State
             base.SwitchState();
         }
 
+        else if (_playerStateMachine.JumpInput)
+        {
+            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.JUMP);
+            base.SwitchState();
+        }
+
+
         else if (_playerStateMachine.MovementDirection.x == 0f)
         {
             _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.IDLE);
@@ -54,7 +61,7 @@ public class Run : State
     {
         // prevent character from rotate the wrong way
         if (_playerStateMachine.MovementDirection.x == 0f) return;
-        
+
         // Get target rotation
         Vector3 dir = new Vector3(_playerStateMachine.MovementDirection.x, 0, 0);
         Quaternion targetRotation = Quaternion.LookRotation(dir);

@@ -12,8 +12,9 @@ using UnityEngine;
 /// 2.keep dependency for each State => so we can send the dependency to each state easily
 /// 3.this also act as a temporaliry glue between script
 ///     3.1 glue between "InputController" and "PlatformerInputProcessor" (now, not anymore)
-///     3.2 glue betwen "Attack State" and "AttackComboData"
-///     3.3 glue between "PlayerStateMachine" and "Gravity"
+///     3.2 glue betwen "Attack State" and "AttackComboData" (now, not anymore)
+///     3.3 glue between "PlayerStateMachine" and "Gravity" (now, not anymore)
+///     3.4 glue between "PlayerStateMachine" and "Concrete State"
 /// </summary>
 public class StateMachineBlackBoard : MonoBehaviour
 {
