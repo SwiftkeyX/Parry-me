@@ -21,29 +21,36 @@ public class Idle : State
     public override void OnUpdate()
     {
         base.OnUpdate();
-        
+
         _animator.SetFloat("MoveSpeed", _idleSpeed, 0.1f, Time.deltaTime);
+
+        _playerStateMachine.MovementMultiplierX = _idleSpeed;
     }
 
     protected override void CheckSwitchState()
     {
-        if (_bb.InputProcessor.Attack_input)
+        if (_playerStateMachine.AttackInput)
         {
-            _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.ATTACK);
+            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.ATTACK);
             base.SwitchState();
         }
 
-        else if (_bb.InputProcessor.MoveDirection.sqrMagnitude > 0f && !_bb.InputProcessor.Run_input)
+        else if (_playerStateMachine.JumpInput)
         {
-            _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.WALK);
+            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.JUMP);
             base.SwitchState();
         }
 
-        else if (_bb.InputProcessor.MoveDirection.sqrMagnitude > 0f && _bb.InputProcessor.Run_input)
+        else if (_playerStateMachine.MovementDirection.x != 0f && !_playerStateMachine.RunInput)
         {
-            _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.RUN);
+            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.WALK);
             base.SwitchState();
         }
 
+        else if (_playerStateMachine.MovementDirection.x != 0f && _playerStateMachine.RunInput)
+        {
+            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.RUN);
+            base.SwitchState();
+        }
     }
 }

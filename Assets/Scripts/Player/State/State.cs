@@ -1,19 +1,21 @@
 using UnityEngine;
 
 /// <summary>
+/// Reusable
+/// 
 /// abstract class for being the base class for each State
 /// </summary>
 public abstract class State
 {
-    protected StateMachineBlackBoard _bb;
     protected Animator _animator;
     protected CharacterController _characterController;
+    protected PlayerStateMachine _playerStateMachine;
 
     public State(StateMachineBlackBoard bb)
     {
-        _bb = bb;
         _animator = bb.Animator;
         _characterController = bb.CharacterController;
+        _playerStateMachine = bb.PlayerStateMachine;
     }
 
     protected virtual void OnEnter() {  }
@@ -31,7 +33,7 @@ public abstract class State
     {
         this.OnExit();
 
-        State newState = _bb.PlayerStateMachine.GetCurrentState();
+        State newState = _playerStateMachine.GetCurrentState();
 
         Debug.Log("Switch State to: " + newState);
 

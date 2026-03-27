@@ -5,7 +5,7 @@ public class Walk : State
     private float _walkSpeed;
     private float _rotationSpeed;
 
-    public Walk(StateMachineBlackBoard bb, float moveSpeed = 3f, float rotationSpeed = 20f) : base(bb)
+    public Walk(StateMachineBlackBoard bb, float moveSpeed = 3f, float rotationSpeed = 180f) : base(bb)
     {
         _walkSpeed = moveSpeed;
         _rotationSpeed = rotationSpeed;
@@ -22,28 +22,34 @@ public class Walk : State
 
         _animator.SetFloat("MoveSpeed", _walkSpeed, 0.1f, Time.deltaTime);
 
-        _bb.CharacterController.Move(_bb.InputProcessor.MoveDirection * _walkSpeed * Time.deltaTime);
+        _playerStateMachine.MovementMultiplierX = _walkSpeed;
 
         RotateTowardMoveDirection();
     }
 
     protected override void CheckSwitchState()
     {
-        if (_bb.InputProcessor.Attack_input)
+        if (_playerStateMachine.AttackInput)
         {
-            _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.ATTACK);
+            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.ATTACK);
             base.SwitchState();
         }
 
-        else if (_bb.InputProcessor.MoveDirection.sqrMagnitude == 0f)
+        else if (_playerStateMachine.JumpInput)
         {
-            _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.IDLE);
+            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.JUMP);
             base.SwitchState();
         }
 
-        else if (_bb.InputProcessor.MoveDirection.sqrMagnitude > 0f && _bb.InputProcessor.Run_input)
+        else if (_playerStateMachine.MovementDirection.x == 0f)
         {
-            _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.RUN);
+            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.IDLE);
+            base.SwitchState();
+        }
+
+        else if (_playerStateMachine.MovementDirection.x != 0f && _playerStateMachine.RunInput)
+        {
+            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.RUN);
             base.SwitchState();
         }
 
@@ -51,15 +57,17 @@ public class Walk : State
 
     private void RotateTowardMoveDirection()
     {
-        // shutup Unity's console log
-        if (_bb.InputProcessor.MoveDirection.sqrMagnitude < 0.001f) return;
+        // prevent character from rotate the wrong way
+        if (_playerStateMachine.MovementDirection.x == 0f) return;
 
         // Get target rotation
-        Quaternion targetRotation = Quaternion.LookRotation(_bb.InputProcessor.MoveDirection);
+        Vector3 dir = new Vector3(_playerStateMachine.MovementDirection.x, 0, 0);
+        Quaternion targetRotation = Quaternion.LookRotation(dir);
+        Debug.Log("targetRotation: " + targetRotation);
 
         // Smoothly rotate
-        _bb.transform.rotation = Quaternion.Slerp(
-            _bb.transform.rotation,
+        _playerStateMachine.transform.rotation = Quaternion.Slerp(
+            _playerStateMachine.transform.rotation,
             targetRotation,
             _rotationSpeed * Time.deltaTime
         );

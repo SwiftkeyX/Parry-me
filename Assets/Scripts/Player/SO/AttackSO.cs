@@ -6,4 +6,5 @@ public class AttackSO : ScriptableObject
     public AnimatorOverrideController animOV;
     public float dmg;
     public float chainAttack;
+    public float attackTimer;
 }
