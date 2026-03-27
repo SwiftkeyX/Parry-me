@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 /// <summary>
+/// Reusable 
+/// 
+/// Role?
 /// 1.to keep AttackSO
 /// 2.to apply new AnimatorOverrideController to existing Animator during runtime
 /// 3.to calucalate attack timer

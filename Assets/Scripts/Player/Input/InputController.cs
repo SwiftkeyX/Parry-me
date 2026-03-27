@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Reusable
+/// </summary>
 public class InputController : MonoBehaviour
 {
     [SerializeField] private InputActionAsset inputActions;
@@ -42,8 +45,6 @@ public class InputController : MonoBehaviour
         _isJumpPressed = _jumpInput.IsPressed();
         _isAttackPressed = _attackInput.IsPressed();
         _isParryPressed = _parryInput.IsPressed();
-
-        // Debug.Log(_isAttackPressed.ToString());
     }
 
 

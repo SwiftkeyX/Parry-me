@@ -1,6 +1,11 @@
 using UnityEngine;
+using UnityEngine.InputSystem.Controls;
 
 /// <summary>
+/// Reusable?
+/// yes, this initially a script for Platformer but It should require no change at all 
+/// if I want to reuse this in the other game's genre in the future. 
+/// 
 /// wat? 
 /// I want to create State for controlling the player's behavior
 /// which should include Idle/ Walk/ Run/ Attack/ Grounded/ Airborne/ etc..
@@ -10,10 +15,6 @@ using UnityEngine;
 /// but when I finally finish that. I don't like it. so this time I want to try something new.
 /// I want to connect this State using Behavior Tree (Specifically Behavior Graph from Behavior Package)
 /// 
-/// why Behavior Graph?
-/// because the UI look great and it's seem to be really flexible. I guess?
-/// also I am planning to use Behavior Graph as a Glue System => to connect Reusable Module
-/// let's see how it does
 /// </summary>
 
 /// <summary>
@@ -22,10 +23,12 @@ using UnityEngine;
 [RequireComponent(typeof(StateMachineBlackBoard))]
 public class PlayerStateMachine : MonoBehaviour
 {
+    // dependency
     private StateMachineBlackBoard _bb;
-    public enum STATE { IDLE, WALK, RUN, JUMP, ATTACK }
 
+    // =========================================== necessary var ===========================================
     // state instance
+    public enum STATE { IDLE, WALK, RUN, JUMP, ATTACK }
     private State _idle;
     private State _walk;
     private State _run;
@@ -33,13 +36,33 @@ public class PlayerStateMachine : MonoBehaviour
     private State _attack;
     private State _currentState;
 
+    // input var
+    public enum INPUT { MOVEMUL, MOVEDIR, JUMPI, ROLLI, ATTACKI }
+    private Vector3 _movementMultiplier;
+    private Vector3 _movementDirection;
+    private bool _runInput;
+    private bool _jumpInput;
+    private bool _rollInput;
+    private bool _attackInput;
+
+
     [Header("Adjust Player Stat")]
     public float WalkSpeed = 3f;
     public float RunSpeed = 6f;
     public float JumpSpeed = 1f;
 
     [Header("Debug")]
-    public bool Debug = false;
+    public bool DebugMode = false;
+
+    // =========================================== setter and getter ===========================================
+    // input getter and setter
+    public float MovementMultiplierX { get { return _movementMultiplier.x; } set { _movementMultiplier.x = value; } }
+    public float MovementMultiplierY { get { return _movementMultiplier.y; } set { _movementMultiplier.y = value; } }
+    public Vector3 MovementDirection { get { return _movementDirection; } set { _movementDirection = value; } }
+    public bool RunInput { get { return _runInput; } set { _runInput = value; } }
+    public bool JumpInput { get { return _jumpInput; } set { _jumpInput = value; } }
+    public bool RollInput { get { return _rollInput; } set { _rollInput = value; } }
+    public bool AttackInput { get { return _attackInput; } set { _attackInput = value; } }
 
     void Awake()
     {
@@ -60,6 +83,17 @@ public class PlayerStateMachine : MonoBehaviour
     {
         // update State
         _currentState.OnUpdate();
+
+        // movement
+        Vector3 completeMovement = new Vector3(
+            _movementDirection.x * _movementMultiplier.x,
+            _movementDirection.y * _movementMultiplier.y,
+            0
+        );
+        // the only .Move() exist in entire system, should be here (prevent unnecessary .Move())
+        _bb.CharacterController.Move(completeMovement * Time.deltaTime);
+
+        ManageDebug();
     }
 
     public State GetCurrentState()
@@ -78,8 +112,13 @@ public class PlayerStateMachine : MonoBehaviour
         else if (s == STATE.JUMP) _currentState = _jump;
 
         else if (s == STATE.ATTACK) _currentState = _attack;
+    }
 
+    private void ManageDebug()
+    {
+        if (!DebugMode) return;
 
+        Debug.Log("MovementDirection: " + MovementDirection);
     }
 }
 

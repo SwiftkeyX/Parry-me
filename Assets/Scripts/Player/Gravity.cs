@@ -1,19 +1,28 @@
 using UnityEngine;
 
+/// <summary>
+/// Reusable
+/// 
+/// Role?
+/// 1.apply gravity manually because we mainly use CharacterController
+/// 2.calculate appropriate jump height
+/// </summary>
 public class Gravity : MonoBehaviour
 {
     // dependency
     private CharacterController _characterController;
-    private StateMachineBlackBoard _bb;
+    private PlayerStateMachine _playerStateMachine;
 
     // necessary var
-    private float _gravityForce = -9.8f;
-    private Vector3 _verticalDir = new Vector3(0, 1, 0);
+    private float _airborneGravityForce = -9.8f;
+    private float _groundedGravityForce = -1f;
+    private bool _isFalling;
+    private float _fallMultiplier = 2f;
 
     void Awake()
     {
         _characterController = GetComponent<CharacterController>();
-        _bb = GetComponent<StateMachineBlackBoard>();
+        _playerStateMachine = GetComponent<PlayerStateMachine>();
     }
 
     void Update()
@@ -23,10 +32,28 @@ public class Gravity : MonoBehaviour
 
     private void ApplyGravity()
     {
-        if (_bb.VerticalMovement > -1f) _bb.VerticalMovement += _gravityForce * Time.deltaTime;
+        // character on the ground
+        if (_characterController.isGrounded)
+        {
+            _playerStateMachine.MovementMultiplierY = _groundedGravityForce;
+        }
 
-        else _bb.VerticalMovement = -1f;
+        // character is airbone and falling downward
+        else if (_isFalling)
+        {
+            float previousYVelocity = _playerStateMachine.MovementMultiplierY;
+            float newYVelocity = _playerStateMachine.MovementMultiplierY + (_airborneGravityForce * _fallMultiplier * Time.deltaTime);
+            float nextYVelocity = (previousYVelocity + newYVelocity) / 2;
+            _playerStateMachine.MovementMultiplierY = nextYVelocity;
+        }
 
-        _characterController.Move(_verticalDir * _bb.VerticalMovement * Time.deltaTime);
+        // character is airbone and jumping upward
+        else
+        {
+            float previousYVelocity = _playerStateMachine.MovementMultiplierY;
+            float newYVelocity = _playerStateMachine.MovementMultiplierY + (_airborneGravityForce * Time.deltaTime);
+            float nextYVelocity = (previousYVelocity + newYVelocity) / 2;
+            _playerStateMachine.MovementMultiplierY = nextYVelocity;
+        }
     }
 }

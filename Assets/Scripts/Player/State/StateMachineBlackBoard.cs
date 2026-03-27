@@ -1,14 +1,19 @@
 using UnityEngine;
 
 /// <summary>
+/// Not Reusable
+/// 
 /// Due to each State (idle/ walk/ run/ etc...) maybe need a lot more dependency from PlayerStateMachine in the future
 /// Instead of me have to manually add new Parameter everytime
 /// I will create BlackBoard that will keep all the dependency need in the future. and send this object to each State
 /// 
 /// this script role is:
-/// 1.keep dependency for each State => so we can send the dependency easily
-/// 2.this also act as a glue between script
-/// 2.1 glue between "InputController" and "InputProcessor"
+/// 1.to be a glue between PlayerStateMachine and Concrete State 
+/// 2.keep dependency for each State => so we can send the dependency to each state easily
+/// 3.this also act as a temporaliry glue between script
+///     3.1 glue between "InputController" and "PlatformerInputProcessor" (now, not anymore)
+///     3.2 glue betwen "Attack State" and "AttackComboData"
+///     3.3 glue between "PlayerStateMachine" and "Gravity"
 /// </summary>
 public class StateMachineBlackBoard : MonoBehaviour
 {
@@ -17,13 +22,8 @@ public class StateMachineBlackBoard : MonoBehaviour
     private CharacterController _characterController;
     private Animator _animator;
     private InputController _inputController;
-    private InputProcessor _inputProcessor;
     private AttackComboData _attackComboData;
     private Gravity _gravity;
-
-    // ============================== other var ==============================================
-    // movement var
-    private float _verticalMovement;
 
     // ============================== setter and getter ==============================
     // component getter
@@ -31,12 +31,8 @@ public class StateMachineBlackBoard : MonoBehaviour
     public CharacterController CharacterController { get { return _characterController; } }
     public Animator Animator { get { return _animator; } }
     public InputController InputController { get { return _inputController; } }
-    public InputProcessor InputProcessor { get { return _inputProcessor; } }
     public AttackComboData AttackComboData { get { return _attackComboData; } }
     public Gravity Gravity { get { return _gravity; } }
-    // movement getter
-    public float VerticalMovement { get { return _verticalMovement; } set { _verticalMovement = value; } }
-
 
     // ============================== debug ==============================
     public bool Debug_chracterController = false;
@@ -50,24 +46,19 @@ public class StateMachineBlackBoard : MonoBehaviour
         _inputController = GetComponent<InputController>();
         _attackComboData = GetComponent<AttackComboData>();
         _gravity = GetComponent<Gravity>();
-        _inputProcessor = new InputProcessor(_inputController);
 
     }
 
     void Update()
     {
-        // basically calculate which direction player move to
-        _inputProcessor.GetInput();
-        _inputProcessor.ProcessInput();
-
         DebugManage();
     }
 
     void DebugManage()
     {
-        if (_playerStateMachine.Debug)
+        if (_playerStateMachine.DebugMode)
         {
-            Debug.Log("verticalMovement: " + _verticalMovement);
+            // Debug.Log("verticalMovement: " + _verticalMovementMultiplier);
         }
 
         if (Debug_chracterController)

@@ -5,22 +5,25 @@ using UnityEngine;
 /// </summary>
 public class Attack : State
 {
+    private AttackComboData _attackComboData;
+
     public Attack(StateMachineBlackBoard bb) : base(bb)
     {
+        _attackComboData = bb.AttackComboData;
     }
 
     protected override void OnEnter()
     {
         base.OnEnter();
 
-        _bb.Animator.SetFloat("MoveSpeed", 0f);
+        _animator.SetFloat("MoveSpeed", 0f);
     }
 
     public override void OnUpdate()
     {
         base.OnUpdate();
 
-        if (_bb.InputProcessor.Attack_input) _bb.AttackComboData.Attack();
+        if (_playerStateMachine.AttackInput) _attackComboData.Attack();
     }
 
     protected override void OnExit()
@@ -29,28 +32,26 @@ public class Attack : State
 
     protected override void CheckSwitchState()
     {
-        if (!_bb.AttackComboData.IsAttackFinish) return;
+        if (!_attackComboData.IsAttackFinish) return;
 
-        if (_bb.InputProcessor.MoveDirection.sqrMagnitude == 0f)
+        if (_playerStateMachine.MovementDirection.x == 0f)
         {
-            _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.IDLE);
+            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.IDLE);
             base.SwitchState();
         }
 
-        else if (_bb.InputProcessor.MoveDirection.sqrMagnitude > 0f && !_bb.InputProcessor.Run_input)
+        else if (_playerStateMachine.MovementDirection.x != 0f && !_playerStateMachine.RunInput)
         {
-            _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.WALK);
+            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.WALK);
             base.SwitchState();
         }
 
-        else if (_bb.InputProcessor.MoveDirection.sqrMagnitude > 0f && _bb.InputProcessor.Run_input)
+        else if (_playerStateMachine.MovementDirection.x != 0f && _playerStateMachine.RunInput)
         {
-            _bb.PlayerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.RUN);
+            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.RUN);
             base.SwitchState();
         }
 
     }
-
-
 
 }
