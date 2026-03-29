@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem.Controls;
 
 /// <summary>
 /// Reusable
@@ -51,9 +51,15 @@ public class PlayerStateMachine : MonoBehaviour
     private float _initialJumpVelocity;
 
     [Header("Debug")]
-    public bool DebugMode = false;
+    private DebugMenu _debugMovement;
+    private DebugMenu _debugState;
+    public List<DebugEntry> DebugMovementInfo;
+    public List<DebugEntry> DebugStateInfo;
 
     // =========================================== setter and getter ===========================================
+    // debug helper
+    public DebugMenu DebugMovement { get { return _debugMovement; } }
+    public DebugMenu DebugState { get { return _debugState; } }
     // input 
     public Vector3 Movement { get { return _movement; } }
     public float MovementMultiplierX { get { return _movementMultiplier.x; } set { _movementMultiplier.x = value; } }
@@ -70,10 +76,16 @@ public class PlayerStateMachine : MonoBehaviour
     public float MaxJumpTime { get { return _maxJumpTime; } }
     public float InitialJumpVelocity { get { return _initialJumpVelocity; } set { _initialJumpVelocity = value; } }
 
+
     void Awake()
     {
         _bb = GetComponent<StateMachineBlackBoard>();
         _gravity = GetComponent<Gravity>();
+
+
+        // debug
+        _debugMovement = new DebugMenu(DebugMovementInfo);
+        _debugState = new DebugMenu(DebugStateInfo);
     }
 
     void Start()
@@ -126,9 +138,10 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void ManageDebug()
     {
-        if (!DebugMode) return;
-
-        Debug.Log("MovementDirection: " + MovementDirection);
+        if (_debugMovement.dict[DebugEntryKEY.MovementDir]) Debug.Log("MovementDirection: " + MovementDirection);
+        if (_debugMovement.dict[DebugEntryKEY.MovementMultiplierY]) Debug.Log("MovementMultiY: " + MovementMultiplierY);
+        if (_debugMovement.dict[DebugEntryKEY.Movement]) Debug.Log("movement: " + _movement);
+        if (_debugMovement.dict[DebugEntryKEY.IsCCGrounded]) Debug.Log("CC is grounded: " + _bb.CharacterController.isGrounded);
     }
-}
 
+}

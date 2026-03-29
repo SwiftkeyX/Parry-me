@@ -81,5 +81,6 @@ public class Jump : State
             _playerStateMachine.MovementMultiplierY = _jumpForce / 2f;
             _jumpOnce = true;
         }
+
     }
 }

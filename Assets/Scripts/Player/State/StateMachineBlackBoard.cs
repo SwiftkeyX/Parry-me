@@ -35,10 +35,6 @@ public class StateMachineBlackBoard : MonoBehaviour
     public AttackComboData AttackComboData { get { return _attackComboData; } }
     public Gravity Gravity { get { return _gravity; } }
 
-    // ============================== debug ==============================
-    public bool Debug_chracterController = false;
-
-
     void Awake()
     {
         _playerStateMachine = GetComponent<PlayerStateMachine>();
@@ -48,23 +44,5 @@ public class StateMachineBlackBoard : MonoBehaviour
         _attackComboData = GetComponent<AttackComboData>();
         _gravity = GetComponent<Gravity>();
 
-    }
-
-    void Update()
-    {
-        DebugManage();
-    }
-
-    void DebugManage()
-    {
-        if (_playerStateMachine.DebugMode)
-        {
-            // Debug.Log("verticalMovement: " + _verticalMovementMultiplier);
-        }
-
-        if (Debug_chracterController)
-        {
-            Debug.Log("CC is grounded: " + _characterController.isGrounded);
-        }
     }
 }

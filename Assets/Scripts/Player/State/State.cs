@@ -35,7 +35,7 @@ public abstract class State
 
         State newState = _playerStateMachine.GetCurrentState();
 
-        Debug.Log("Switch State to: " + newState);
+        if (_playerStateMachine.DebugState.dict[DebugEntryKEY.SwitchState]) Debug.Log("Switch State to: " + newState);
 
         newState.OnEnter();
     }

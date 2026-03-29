@@ -36,7 +36,7 @@ public class Run : State
             base.SwitchState();
         }
 
-        else if (_playerStateMachine.JumpInput)
+        else if (_characterController.isGrounded && _playerStateMachine.JumpInput)
         {
             _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.JUMP);
             base.SwitchState();

@@ -20,6 +20,9 @@ public class Gravity : MonoBehaviour
     private float _groundedGravityForce = -1f;
     private float _fallMultiplier = 2f;
 
+    // 
+
+
     void Awake()
     {
         _characterController = GetComponent<CharacterController>();
@@ -36,22 +39,23 @@ public class Gravity : MonoBehaviour
 
     public void ApplyGravity()
     {
+        bool grounded = _characterController.isGrounded;
         bool isFalling = (_playerStateMachine.Movement.y < 0);
 
         // character on the ground
-        if (_characterController.isGrounded)
+        if (grounded)
         {
             _playerStateMachine.MovementMultiplierY = _groundedGravityForce;
         }
 
         // character is airbone and falling downward
-        else if (isFalling)
-        {
-            float previousYVelocity = _playerStateMachine.MovementMultiplierY;
-            float newYVelocity = _playerStateMachine.MovementMultiplierY + (_airborneGravityForce * _fallMultiplier * Time.deltaTime);
-            float nextYVelocity = (previousYVelocity + newYVelocity) / 2;
-            _playerStateMachine.MovementMultiplierY = nextYVelocity;
-        }
+        // else if (isFalling)
+        // {
+        //     float previousYVelocity = _playerStateMachine.MovementMultiplierY;
+        //     float newYVelocity = _playerStateMachine.MovementMultiplierY + (_airborneGravityForce * _fallMultiplier * Time.deltaTime);
+        //     float nextYVelocity = (previousYVelocity + newYVelocity) / 2;
+        //     _playerStateMachine.MovementMultiplierY = nextYVelocity;
+        // }
 
         // character is airbone and jumping upward
         else

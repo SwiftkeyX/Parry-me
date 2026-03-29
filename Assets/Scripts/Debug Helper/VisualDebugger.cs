@@ -2,6 +2,8 @@ using TMPro;
 using UnityEngine;
 
 /// <summary>
+/// not Reusable
+/// 
 /// 1.to debug AttackCombaoData of the player (using TMP)
 /// </summary>
 [RequireComponent(typeof(AttackComboData))]
