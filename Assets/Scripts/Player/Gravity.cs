@@ -14,6 +14,7 @@ public class Gravity : MonoBehaviour
     // dependency
     private CharacterController _characterController;
     private PlayerStateMachine _playerStateMachine;
+    private PlayerDebug _playerDebug;
 
     // necessary var
     private float _airborneGravityForce;
@@ -27,6 +28,7 @@ public class Gravity : MonoBehaviour
     {
         _characterController = GetComponent<CharacterController>();
         _playerStateMachine = GetComponent<PlayerStateMachine>();
+        _playerDebug = GetComponent<PlayerDebug>();
         CalculateJumpHeight();
     }
 
@@ -47,7 +49,7 @@ public class Gravity : MonoBehaviour
         {
             _playerStateMachine.MovementMultiplierY = _groundedGravityForce;
 
-            if (_playerStateMachine.DebugJump.IsDebugEnabled(DebugEntryKEY.GravityForceApply)) 
+            if (_playerDebug.DebugJump.IsDebugEnabled(DebugEntryKEY.GravityForceApply)) 
                 Debug.Log("Grounded Gravity Force apply");
         }
 
@@ -59,10 +61,10 @@ public class Gravity : MonoBehaviour
             float nextYVelocity = (previousYVelocity + newYVelocity) / 2;
             _playerStateMachine.MovementMultiplierY = nextYVelocity;
 
-            if (_playerStateMachine.DebugJump.IsDebugEnabled(DebugEntryKEY.GravityForceApply)) 
+            if (_playerDebug.DebugJump.IsDebugEnabled(DebugEntryKEY.GravityForceApply)) 
                 Debug.Log("Airborne Falling GravityForce apply");
 
-            if (_playerStateMachine.DebugJump.IsDebugEnabled(DebugEntryKEY.PreviousYAndNewY)) 
+            if (_playerDebug.DebugJump.IsDebugEnabled(DebugEntryKEY.PreviousYAndNewY)) 
                 Debug.Log("previousY: " + previousYVelocity + " newY: " + newYVelocity);
         }
 
@@ -74,10 +76,10 @@ public class Gravity : MonoBehaviour
             float nextYVelocity = (previousYVelocity + newYVelocity) / 2;
             _playerStateMachine.MovementMultiplierY = nextYVelocity;
 
-            if (_playerStateMachine.DebugJump.IsDebugEnabled(DebugEntryKEY.GravityForceApply)) 
+            if (_playerDebug.DebugJump.IsDebugEnabled(DebugEntryKEY.GravityForceApply)) 
                 Debug.Log("Airborne Jumping GravityForce apply");
 
-            if (_playerStateMachine.DebugJump.IsDebugEnabled(DebugEntryKEY.PreviousYAndNewY)) 
+            if (_playerDebug.DebugJump.IsDebugEnabled(DebugEntryKEY.PreviousYAndNewY)) 
                 Debug.Log("previousY: " + previousYVelocity + " newY: " + newYVelocity);
         }
     }

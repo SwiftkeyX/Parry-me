@@ -25,6 +25,8 @@ public class StateMachineBlackBoard : MonoBehaviour
     private InputController _inputController;
     private AttackComboData _attackComboData;
     private Gravity _gravity;
+    private PlayerDebug _playerDebug;
+    [SerializeField] private CollisionController _collisionController;
 
     // ============================== setter and getter ==============================
     // component getter
@@ -34,6 +36,8 @@ public class StateMachineBlackBoard : MonoBehaviour
     public InputController InputController { get { return _inputController; } }
     public AttackComboData AttackComboData { get { return _attackComboData; } }
     public Gravity Gravity { get { return _gravity; } }
+    public CollisionController CollisionController { get { return _collisionController; } }
+    public PlayerDebug PlayerDebug { get { return _playerDebug; } }
 
     void Awake()
     {
@@ -43,6 +47,6 @@ public class StateMachineBlackBoard : MonoBehaviour
         _inputController = GetComponent<InputController>();
         _attackComboData = GetComponent<AttackComboData>();
         _gravity = GetComponent<Gravity>();
-
+        _playerDebug = GetComponent<PlayerDebug>();   
     }
 }

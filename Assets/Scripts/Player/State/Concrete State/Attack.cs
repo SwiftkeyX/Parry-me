@@ -6,10 +6,12 @@ using UnityEngine;
 public class Attack : State
 {
     private AttackComboData _attackComboData;
+    private CollisionController _collisionController;
 
     public Attack(StateMachineBlackBoard bb) : base(bb)
     {
         _attackComboData = bb.AttackComboData;
+        _collisionController = bb.CollisionController;
     }
 
     protected override void OnEnter()
@@ -27,6 +29,8 @@ public class Attack : State
 
         // player don't move when attacking
         _playerStateMachine.MovementMultiplierX = 0f;
+
+        
     }
 
     protected override void OnExit()
@@ -35,7 +39,7 @@ public class Attack : State
 
     protected override void CheckSwitchState()
     {
-        if (!_attackComboData.IsAttackFinish) return;
+        if (!_attackComboData.AttackBuffer.IsAttackFinish) return;
 
         if (_playerStateMachine.MovementDirection.x == 0f)
         {
@@ -56,5 +60,7 @@ public class Attack : State
         }
 
     }
+
+    
 
 }

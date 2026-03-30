@@ -9,11 +9,13 @@ public abstract class State
 {
     protected Animator _animator;
     protected PlayerStateMachine _playerStateMachine;
+    protected PlayerDebug _playerDebug;
 
     public State(StateMachineBlackBoard bb)
     {
         _animator = bb.Animator;
         _playerStateMachine = bb.PlayerStateMachine;
+        _playerDebug = bb.PlayerDebug;
     }
 
     protected virtual void OnEnter() {  }
@@ -33,7 +35,7 @@ public abstract class State
 
         State newState = _playerStateMachine.GetCurrentState();
 
-        if (_playerStateMachine.DebugState.IsDebugEnabled(DebugEntryKEY.SwitchState)) 
+        if (_playerDebug.DebugState.IsDebugEnabled(DebugEntryKEY.SwitchState)) 
             Debug.Log("Switch State to: " + newState);
 
         newState.OnEnter();

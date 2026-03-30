@@ -53,19 +53,7 @@ public class PlayerStateMachine : MonoBehaviour
     private bool _isGrounded;
     private bool _isFalling;
 
-    [Header("Debug")]
-    private DebugMenu _debugMovement;
-    private DebugMenu _debugJump;
-    private DebugMenu _debugState;
-    public List<DebugEntry> DebugMovementInfo;
-    public List<DebugEntry> DebugJumpInfo;
-    public List<DebugEntry> DebugStateInfo;
-
     // =========================================== setter and getter ===========================================
-    // debug helper
-    public DebugMenu DebugMovement { get { return _debugMovement; } }
-    public DebugMenu DebugJump { get { return _debugJump; } }
-    public DebugMenu DebugState { get { return _debugState; } }
     // input 
     public Vector3 Movement { get { return _movement; } }
     public float MovementMultiplierX { get { return _movementMultiplier.x; } set { _movementMultiplier.x = value; } }
@@ -88,12 +76,6 @@ public class PlayerStateMachine : MonoBehaviour
     {
         _bb = GetComponent<StateMachineBlackBoard>();
         _gravity = GetComponent<Gravity>();
-
-
-        // debug
-        _debugMovement = new DebugMenu(DebugMovementInfo);
-        _debugJump = new DebugMenu(DebugJumpInfo);
-        _debugState = new DebugMenu(DebugStateInfo);
     }
 
     void Start()
@@ -122,8 +104,6 @@ public class PlayerStateMachine : MonoBehaviour
 
         // apply gravity after .Move()
         _gravity.ApplyGravity();
-
-        ManageDebug();
     }
 
     public State GetCurrentState()
@@ -144,48 +124,4 @@ public class PlayerStateMachine : MonoBehaviour
         else if (s == STATE.ATTACK) _currentState = _attack;
     }
 
-    private void ManageDebug()
-    {
-        if (_debugMovement.IsDebugEnabled(DebugEntryKEY.MovementDir)) Debug.Log("MovementDirection: " + MovementDirection);
-
-        if (_debugMovement.IsDebugEnabled(DebugEntryKEY.MovementMultiplierY)) Debug.Log("MovementMultiY: " + MovementMultiplierY);
-
-        if (_debugMovement.IsDebugEnabled(DebugEntryKEY.Movement)) Debug.Log("movement: " + _movement);
-
-        if (_debugMovement.IsDebugEnabled(DebugEntryKEY.IsCCGrounded)) Debug.Log("CC is grounded: " + _bb.CharacterController.isGrounded);
-    }
-
-    // ======================== run in Editor time ============================
-    void OnValidate()
-    {
-        if (DebugMovementInfo != null && DebugMovementInfo.Count == 0)
-        {
-            DebugMovementInfo = new List<DebugEntry>
-            {
-                new DebugEntry(DebugEntryKEY.MovementDir),
-                new DebugEntry(DebugEntryKEY.MovementMultiplierY),
-                new DebugEntry(DebugEntryKEY.Movement),
-                new DebugEntry(DebugEntryKEY.IsCCGrounded),
-            };
-            Debug.Log("hello");
-        }
-
-        if (DebugJumpInfo != null && DebugJumpInfo.Count == 0)
-        {
-            DebugJumpInfo = new List<DebugEntry>
-            {
-                new DebugEntry(DebugEntryKEY.PreviousYAndNewY),
-                new DebugEntry(DebugEntryKEY.GravityForceApply),
-            };
-        }
-
-        if (DebugStateInfo != null && DebugStateInfo.Count == 0)
-        {
-            DebugStateInfo = new List<DebugEntry>
-            {
-                new DebugEntry(DebugEntryKEY.SwitchState),
-            };
-        }
-
-    }
 }

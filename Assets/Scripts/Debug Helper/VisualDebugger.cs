@@ -6,7 +6,6 @@ using UnityEngine;
 /// 
 /// 1.to debug AttackCombaoData of the player (using TMP)
 /// </summary>
-[RequireComponent(typeof(AttackComboData))]
 public class VisualDebugger : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI debug_textUI;
@@ -17,20 +16,20 @@ public class VisualDebugger : MonoBehaviour
         _attackComboData = GetComponent<AttackComboData>();
     }
 
-    void Start()
-    {
-        // turn on/off TMP (text mesh pro) depend on script's debug mode
-        if (!_attackComboData.debugMode) debug_textUI.enabled = false;
-    }
+    // void Start()
+    // {
+    //     // turn on/off TMP (text mesh pro) depend on script's debug mode
+    //     if (!_attackComboData.debugMode) debug_textUI.enabled = false;
+    // }
 
-    void Update()
-    {
-        if (_attackComboData.debugMode)
-        {
-            debug_textUI.text
-            = "timer: " + _attackComboData.Timer.ToString("F3") + "\n" +
-            "ComboNumber: " + _attackComboData.ComboNumber + "\n" +
-            "IsAttackFinish: " + _attackComboData.IsAttackFinish;
-        }
-    }
+    // void Update()
+    // {
+    //     if (_attackComboData.debugMode)
+    //     {
+    //         debug_textUI.text
+    //         = "timer: " + _attackComboData.Timer.ToString("F3") + "\n" +
+    //         "ComboNumber: " + _attackComboData.ComboNumber + "\n" +
+    //         "IsAttackFinish: " + _attackComboData.IsAttackFinish;
+    //     }
+    // }
 }

@@ -17,7 +17,6 @@ public class EnemyStat : MonoBehaviour, IDamageble
     {
         _health -= dmg;
         _healthbar.SetCurrentHealth(_health);
-        Debug.Log("Enemy is hit");
     }
 
     public TEAM GetTeam()
