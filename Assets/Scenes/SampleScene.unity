@@ -1146,7 +1146,23 @@ MonoBehaviour:
   _runSpeed: 6
   _maxJumpHeight: 3
   _maxJumpTime: 1
-  DebugMode: 0
+  DebugMovementInfo:
+  - key: 0
+    value: 0
+  - key: 1
+    value: 0
+  - key: 2
+    value: 0
+  - key: 3
+    value: 0
+  DebugJumpInfo:
+  - key: 4
+    value: 0
+  - key: 5
+    value: 0
+  DebugStateInfo:
+  - key: 6
+    value: 0
 --- !u!114 &1440000128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1159,7 +1175,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1737dc259b7deb43b8d66b77ee63dea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Debug_chracterController: 0
 --- !u!114 &1440000131
 MonoBehaviour:
   m_ObjectHideFlags: 0

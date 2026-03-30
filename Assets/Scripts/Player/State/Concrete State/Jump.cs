@@ -17,7 +17,7 @@ public class Jump : State
     {
         base.OnEnter();
 
-        _animator.CrossFade("jump", 0.1f);
+        _animator.CrossFade("jump", 0.05f);
 
         _animator.SetBool("Grounded", false);
 
@@ -40,7 +40,10 @@ public class Jump : State
 
     protected override void CheckSwitchState()
     {
-        if (!_jumpOnce || !_characterController.isGrounded) return;
+        if (!_jumpOnce || !_playerStateMachine.IsGrounded)
+        {
+            return;
+        }
 
         if (_playerStateMachine.AttackInput)
         {
@@ -56,6 +59,7 @@ public class Jump : State
 
         else if (_playerStateMachine.MovementDirection.x != 0f && !_playerStateMachine.RunInput)
         {
+            Debug.Log("I am here");
             _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.WALK);
             base.SwitchState();
         }
@@ -74,7 +78,7 @@ public class Jump : State
 
         AnimatorStateInfo info = _animator.GetCurrentAnimatorStateInfo(0);
         bool inJumpAnimatorState = info.IsTag("Jump");
-        bool inJumpWindow = (info.normalizedTime > 0.1);
+        bool inJumpWindow = (info.normalizedTime > 0.4);
 
         if (inJumpWindow && inJumpAnimatorState)
         {

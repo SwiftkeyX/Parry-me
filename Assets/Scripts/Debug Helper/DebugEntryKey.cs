@@ -8,10 +8,14 @@ public enum DebugEntryKEY
     MovementDir,
     MovementMultiplierY,
     Movement,
-    IsCCGrounded,
 
+    // jump state
+    IsCCGrounded,
+    PreviousYAndNewY,
+    GravityForceApply,
+    
     // state debug key
     SwitchState,
-
+    
     // ...
 }

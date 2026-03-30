@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Reusable
@@ -19,7 +20,7 @@ using UnityEngine;
 public class PlayerStateMachine : MonoBehaviour
 {
     // dependency
-    private StateMachineBlackBoard _bb;
+    public StateMachineBlackBoard _bb;
     private Gravity _gravity;
 
     // =========================================== necessary var ===========================================
@@ -41,24 +42,29 @@ public class PlayerStateMachine : MonoBehaviour
     private bool _rollInput;
     private bool _attackInput;
 
-    [Header("Adjust Movement State")]
+    [Header("Movement State")]
     [SerializeField] private float _walkSpeed = 3f;
     [SerializeField] private float _runSpeed = 6f;
 
-    [Header("Adjust Jump State")]
+    [Header("Jump State")]
     [SerializeField] private float _maxJumpHeight = 4f;
     [SerializeField] private float _maxJumpTime = 0.5f;
     private float _initialJumpVelocity;
+    private bool _isGrounded;
+    private bool _isFalling;
 
     [Header("Debug")]
     private DebugMenu _debugMovement;
+    private DebugMenu _debugJump;
     private DebugMenu _debugState;
     public List<DebugEntry> DebugMovementInfo;
+    public List<DebugEntry> DebugJumpInfo;
     public List<DebugEntry> DebugStateInfo;
 
     // =========================================== setter and getter ===========================================
     // debug helper
     public DebugMenu DebugMovement { get { return _debugMovement; } }
+    public DebugMenu DebugJump { get { return _debugJump; } }
     public DebugMenu DebugState { get { return _debugState; } }
     // input 
     public Vector3 Movement { get { return _movement; } }
@@ -75,7 +81,8 @@ public class PlayerStateMachine : MonoBehaviour
     public float MaxJumpHeight { get { return _maxJumpHeight; } }
     public float MaxJumpTime { get { return _maxJumpTime; } }
     public float InitialJumpVelocity { get { return _initialJumpVelocity; } set { _initialJumpVelocity = value; } }
-
+    public bool IsGrounded { get { return _isGrounded; } set { _isGrounded = value; } }
+    public bool IsFalling { get { return _isFalling; } set { _isFalling = value; } }
 
     void Awake()
     {
@@ -85,6 +92,7 @@ public class PlayerStateMachine : MonoBehaviour
 
         // debug
         _debugMovement = new DebugMenu(DebugMovementInfo);
+        _debugJump = new DebugMenu(DebugJumpInfo);
         _debugState = new DebugMenu(DebugStateInfo);
     }
 
@@ -138,10 +146,46 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void ManageDebug()
     {
-        if (_debugMovement.dict[DebugEntryKEY.MovementDir]) Debug.Log("MovementDirection: " + MovementDirection);
-        if (_debugMovement.dict[DebugEntryKEY.MovementMultiplierY]) Debug.Log("MovementMultiY: " + MovementMultiplierY);
-        if (_debugMovement.dict[DebugEntryKEY.Movement]) Debug.Log("movement: " + _movement);
-        if (_debugMovement.dict[DebugEntryKEY.IsCCGrounded]) Debug.Log("CC is grounded: " + _bb.CharacterController.isGrounded);
+        if (_debugMovement.IsDebugEnabled(DebugEntryKEY.MovementDir)) Debug.Log("MovementDirection: " + MovementDirection);
+
+        if (_debugMovement.IsDebugEnabled(DebugEntryKEY.MovementMultiplierY)) Debug.Log("MovementMultiY: " + MovementMultiplierY);
+
+        if (_debugMovement.IsDebugEnabled(DebugEntryKEY.Movement)) Debug.Log("movement: " + _movement);
+
+        if (_debugMovement.IsDebugEnabled(DebugEntryKEY.IsCCGrounded)) Debug.Log("CC is grounded: " + _bb.CharacterController.isGrounded);
     }
 
+    // ======================== run in Editor time ============================
+    void OnValidate()
+    {
+        if (DebugMovementInfo != null && DebugMovementInfo.Count == 0)
+        {
+            DebugMovementInfo = new List<DebugEntry>
+            {
+                new DebugEntry(DebugEntryKEY.MovementDir),
+                new DebugEntry(DebugEntryKEY.MovementMultiplierY),
+                new DebugEntry(DebugEntryKEY.Movement),
+                new DebugEntry(DebugEntryKEY.IsCCGrounded),
+            };
+            Debug.Log("hello");
+        }
+
+        if (DebugJumpInfo != null && DebugJumpInfo.Count == 0)
+        {
+            DebugJumpInfo = new List<DebugEntry>
+            {
+                new DebugEntry(DebugEntryKEY.PreviousYAndNewY),
+                new DebugEntry(DebugEntryKEY.GravityForceApply),
+            };
+        }
+
+        if (DebugStateInfo != null && DebugStateInfo.Count == 0)
+        {
+            DebugStateInfo = new List<DebugEntry>
+            {
+                new DebugEntry(DebugEntryKEY.SwitchState),
+            };
+        }
+
+    }
 }

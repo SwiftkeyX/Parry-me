@@ -15,4 +15,10 @@ public class DebugMenu
             dict.Add(list[i].key, list[i].value);
         }
     }
+
+    public bool IsDebugEnabled(DebugEntryKEY key)
+    {
+        bool isEnabled;
+        return dict.TryGetValue(key, out isEnabled) && isEnabled;
+    }
 }
