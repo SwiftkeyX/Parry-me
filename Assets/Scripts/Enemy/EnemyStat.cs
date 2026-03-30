@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerStat : MonoBehaviour, IDamageble
+public class EnemyStat : MonoBehaviour, IDamageble
 {
     [SerializeField] private float _health = 100f;
     [SerializeField] private float _maxHealth = 100f;
@@ -17,6 +17,7 @@ public class PlayerStat : MonoBehaviour, IDamageble
     {
         _health -= dmg;
         _healthbar.SetCurrentHealth(_health);
+        Debug.Log("Enemy is hit");
     }
 
     public TEAM GetTeam()
