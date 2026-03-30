@@ -18,7 +18,6 @@ public class AttackComboData : MonoBehaviour
     private int _comboNumber;
     private float _lastClickedTime;
     private bool _isAttackFinish;
-    private float _animationFinish = 0.9f;
     private Coroutine _attackTimer;
     private float _timer;
 
