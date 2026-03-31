@@ -14,6 +14,7 @@ public class HitboxController : MonoBehaviour
 {
     private List<HitboxData> _data;
     private Animator _animator;
+    [SerializeField] private ColliderGizmoDrawer _hitboxGizmo;
     [SerializeField] private CollisionCreater _CollisionCreater;
 
     // getter and setter
@@ -34,11 +35,13 @@ public class HitboxController : MonoBehaviour
         if (animator_time > _data[currentAttack].enableHitboxTime && animator_time <= _data[currentAttack].disableHitboxTime)
         {
             _CollisionCreater.EnableHitbox();
+            _hitboxGizmo.isActive = true;
         }
 
         else if (animator_time > _data[currentAttack].disableHitboxTime)
         {
             _CollisionCreater.DisableHitbox();
+            _hitboxGizmo.isActive = false;
         }
     }
 
