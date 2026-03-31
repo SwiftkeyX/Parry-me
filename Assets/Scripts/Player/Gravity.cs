@@ -8,7 +8,6 @@ using UnityEngine;
 /// 2.calculate appropriate jump height
 /// 3.calculate appropriate gravity
 /// </summary>
-[RequireComponent(typeof(PlayerStateMachine))]
 public class Gravity : MonoBehaviour
 {
     // dependency

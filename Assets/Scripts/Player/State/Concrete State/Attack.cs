@@ -5,13 +5,13 @@ using UnityEngine;
 /// </summary>
 public class Attack : State
 {
-    private AttackComboData _attackComboData;
-    private CollisionController _collisionController;
+    private PlayerAttackManager _PlayerAttackManager;
+    private CollisionCreater _CollisionCreater;
 
     public Attack(StateMachineBlackBoard bb) : base(bb)
     {
-        _attackComboData = bb.AttackComboData;
-        _collisionController = bb.CollisionController;
+        _PlayerAttackManager = bb.PlayerAttackManager;
+        _CollisionCreater = bb.CollisionCreater;
     }
 
     protected override void OnEnter()
@@ -25,8 +25,8 @@ public class Attack : State
     {
         base.OnUpdate();
 
-        // if (_playerStateMachine.AttackInput) _attackComboData.Attack();
-        _attackComboData.Attack(_playerStateMachine.AttackInput);
+        // if (_playerStateMachine.AttackInput) _PlayerAttackManager.Attack();
+        _PlayerAttackManager.Attack(_playerStateMachine.AttackInput);
 
         // player don't move when attacking
         _playerStateMachine.MovementMultiplierX = 0f;
@@ -38,7 +38,7 @@ public class Attack : State
 
     protected override void CheckSwitchState()
     {
-        if (!_attackComboData.AttackBuffer.IsAttackFinish) return;
+        if (!_PlayerAttackManager.AttackBuffer.IsAttackFinish) return;
 
         if (_playerStateMachine.MovementDirection.x == 0f)
         {

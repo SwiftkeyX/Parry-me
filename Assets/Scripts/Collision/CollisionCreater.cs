@@ -11,7 +11,7 @@ using UnityEngine;
 /// How to use?
 /// attacker's gameobject called either "EnableHitbox()" or "DisableHitbox()"
 /// </summary>
-public class CollisionController : MonoBehaviour
+public class CollisionCreater : MonoBehaviour
 {
     [SerializeField] private TEAM _team;
     private Collider _collider;
@@ -31,6 +31,7 @@ public class CollisionController : MonoBehaviour
         GameObject target = other.gameObject;
         IDamageble targetStat = target.GetComponent<IDamageble>();
 
+        Debug.Log("I am " + this.gameObject + " target hit is: " + target);
         // can't hit the same team
         if (targetStat.GetTeam() == _team) return;
 

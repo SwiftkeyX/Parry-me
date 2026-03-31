@@ -16,7 +16,6 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// class for create State's instance and give them necessary variable/dependency
 /// </summary>
-[RequireComponent(typeof(Gravity))]
 public class PlayerStateMachine : MonoBehaviour
 {
     // dependency
