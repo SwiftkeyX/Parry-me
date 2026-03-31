@@ -16,3 +16,5 @@ MonoBehaviour:
   dmg: 10
   chainAttack: 1
   attackTimer: 1.3
+  enableHitboxTime: 0.55
+  disableHitboxTime: 0.66

@@ -24,6 +24,7 @@ public class StateMachineBlackBoard : MonoBehaviour
     private Animator _animator;
     private InputController _inputController;
     private AttackComboData _attackComboData;
+    private AttackBuffer _attackBuffer;
     private Gravity _gravity;
     private PlayerDebug _playerDebug;
     [SerializeField] private CollisionController _collisionController;
@@ -35,6 +36,7 @@ public class StateMachineBlackBoard : MonoBehaviour
     public Animator Animator { get { return _animator; } }
     public InputController InputController { get { return _inputController; } }
     public AttackComboData AttackComboData { get { return _attackComboData; } }
+    public AttackBuffer AttackBuffer { get { return _attackBuffer; } }
     public Gravity Gravity { get { return _gravity; } }
     public CollisionController CollisionController { get { return _collisionController; } }
     public PlayerDebug PlayerDebug { get { return _playerDebug; } }
@@ -46,7 +48,8 @@ public class StateMachineBlackBoard : MonoBehaviour
         _animator = GetComponent<Animator>();
         _inputController = GetComponent<InputController>();
         _attackComboData = GetComponent<AttackComboData>();
+        _attackBuffer = GetComponent<AttackBuffer>();
         _gravity = GetComponent<Gravity>();
-        _playerDebug = GetComponent<PlayerDebug>();   
+        _playerDebug = GetComponent<PlayerDebug>();
     }
 }

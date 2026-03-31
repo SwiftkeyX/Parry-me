@@ -47,9 +47,9 @@ public class AttackBuffer : MonoBehaviour
     }
 
     // logic to allow the current attack to chain to next attack
-    public void Attack()
+    public bool Attack()
     {
-        if (_comboNumber >= _data.Count) return;
+        if (_comboNumber >= _data.Count) return false;
 
         // calculate attack buffer
         bool isAttackBuffer;
@@ -64,13 +64,18 @@ public class AttackBuffer : MonoBehaviour
             // start the attack timer, if timer is run out => call AttackEnd()
             _attackTimer = StartCoroutine(AttackTimer(_data[_comboNumber].attackTimer));
 
+            // play animation
             _animator.runtimeAnimatorController = _data[_comboNumber].animOV;
             _animator.CrossFade("Attack", 0.1f, 0, 0f);
 
+            // update flag
             _comboNumber++;
             _lastClickedTime = Time.time;
             _isAttackFinish = false;
+            return true;
         }
+
+        return false;
     }
 
     // reset var when attack end

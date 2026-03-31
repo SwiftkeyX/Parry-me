@@ -9,7 +9,7 @@ public enum DebugEntryKEY
     MovementMultiplierY,
     Movement,
 
-    // jump state
+    // jump debug state
     IsCCGrounded,
     PreviousYAndNewY,
     GravityForceApply,
@@ -17,5 +17,8 @@ public enum DebugEntryKEY
     // state debug key
     SwitchState,
     
+    // collision debug key
+    HitboxTiming,
+
     // ...
 }

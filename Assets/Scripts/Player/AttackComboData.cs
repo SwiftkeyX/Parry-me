@@ -15,6 +15,10 @@ public class AttackComboData : MonoBehaviour
     [SerializeField] private CollisionController _collisionController;
     private Animator _animator;
     private AttackBuffer _attackBuffer;
+    private PlayerDebug _playerDebug;
+
+    // var
+    int currentAttack = -1;
 
     // setter and getter
     public AttackBuffer AttackBuffer { get { return _attackBuffer; } }
@@ -23,6 +27,7 @@ public class AttackComboData : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _attackBuffer = GetComponent<AttackBuffer>();
+        _playerDebug = GetComponent<PlayerDebug>();
     }
 
     void Start()
@@ -35,25 +40,53 @@ public class AttackComboData : MonoBehaviour
         }
     }
 
-    public void Attack()
+    public void Attack(bool attackInput)
     {
-        // enable, disable hitbox
-        AnimatorStateInfo stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
-        int comboNumber = _attackBuffer.ComboNumber;
+        // ======================= logic for buffer the attack =======================
+        // if successfully attack, mean character is using "currentAttack"
+        bool chainAttackSuccess = false;
+        if (attackInput) chainAttackSuccess = _attackBuffer.Attack();
+        if (chainAttackSuccess)
+        {
+            currentAttack = _attackBuffer.ComboNumber - 1;
 
-        // guard
-        if (comboNumber >= _attackSO.Count) return;
-
-        if (stateInfo.normalizedTime > _attackSO[comboNumber].enableHitboxTime && stateInfo.normalizedTime <= _attackSO[comboNumber].disableHitboxTime)
-            _collisionController.EnableHitbox();
-
-        else if (stateInfo.normalizedTime > _attackSO[comboNumber].disableHitboxTime)
+            // when change attack early, disable hitbox immediately
             _collisionController.DisableHitbox();
 
+            if (_playerDebug.DebugCollision.IsDebugEnabled(DebugEntryKEY.HitboxTiming))
+                Debug.Log("[Collision] current attack: " + currentAttack + " Disable the hitbox Early");
+        }
 
-        // buffer the attack, play the attack animation, comboNumber++
-        _attackBuffer.Attack();
+
+        // ======================= logic for enable, disable hitbox =======================
+        // guard
+        if (currentAttack < 0 || currentAttack >= _attackSO.Count) return;
+
+        float animator_time = _animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+
+        if (_playerDebug.DebugCollision.IsDebugEnabled(DebugEntryKEY.HitboxTiming))
+            Debug.Log("[Collision] current attact: " + currentAttack + " animator time: " + animator_time +
+            " enable time: " + _attackSO[currentAttack].enableHitboxTime +
+            " disable time: " + _attackSO[currentAttack].disableHitboxTime);
+
+        if (animator_time > _attackSO[currentAttack].enableHitboxTime && animator_time <= _attackSO[currentAttack].disableHitboxTime)
+        {
+            _collisionController.EnableHitbox();
+
+            if (_playerDebug.DebugCollision.IsDebugEnabled(DebugEntryKEY.HitboxTiming))
+                Debug.Log("[Collision] current attack: " + currentAttack + " Enable the hitbox");
+        }
+
+        else if (animator_time > _attackSO[currentAttack].disableHitboxTime)
+        {
+            _collisionController.DisableHitbox();
+
+            if (_playerDebug.DebugCollision.IsDebugEnabled(DebugEntryKEY.HitboxTiming))
+                Debug.Log("[Collision] current attack: " + currentAttack + " Disable the hitbox");
+        }
+
     }
+
 
 }
 

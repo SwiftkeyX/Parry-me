@@ -28,14 +28,12 @@ public class CollisionController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("I am " + gameObject);
         GameObject target = other.gameObject;
         IDamageble targetStat = target.GetComponent<IDamageble>();
 
         // can't hit the same team
         if (targetStat.GetTeam() == _team) return;
 
-        Debug.Log("target is hit " + target);
         targetStat.GetHit(10f);
     }
 
