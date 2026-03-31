@@ -31,7 +31,6 @@ public class CollisionCreater : MonoBehaviour
         GameObject target = other.gameObject;
         IDamageble targetStat = target.GetComponent<IDamageble>();
 
-        Debug.Log("I am " + this.gameObject + " target hit is: " + target);
         // can't hit the same team
         if (targetStat.GetTeam() == _team) return;
 

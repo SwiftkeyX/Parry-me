@@ -4,6 +4,8 @@ using UnityEngine;
 
 /// <summary>
 /// Reusable
+/// 
+/// Role?
 /// calculate "Is Attack buffer" for the player
 /// 
 /// How?

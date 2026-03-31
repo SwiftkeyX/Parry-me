@@ -8,7 +8,6 @@ using UnityEngine;
 /// 
 /// Role?
 /// 1.Enable/Disable hitbox
-/// 2.use with CollisionCreater
 /// </summary>
 public class HitboxController : MonoBehaviour
 {
