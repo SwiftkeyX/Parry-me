@@ -1,8 +1,9 @@
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem;
 
 /// <summary>
-/// Reusable?
+/// Reusable
 /// yes, this initially a script for Platformer but It should require no change at all 
 /// if I want to reuse this in the other game's genre in the future. 
 /// 
@@ -10,21 +11,16 @@ using UnityEngine.InputSystem.Controls;
 /// I want to create State for controlling the player's behavior
 /// which should include Idle/ Walk/ Run/ Attack/ Grounded/ Airborne/ etc..
 /// 
-/// how to connect those state together?
-/// At first, I used to connect those State using Hierarchical FSM
-/// but when I finally finish that. I don't like it. so this time I want to try something new.
-/// I want to connect this State using Behavior Tree (Specifically Behavior Graph from Behavior Package)
-/// 
 /// </summary>
 
 /// <summary>
 /// class for create State's instance and give them necessary variable/dependency
 /// </summary>
-[RequireComponent(typeof(StateMachineBlackBoard))]
 public class PlayerStateMachine : MonoBehaviour
 {
     // dependency
-    private StateMachineBlackBoard _bb;
+    public StateMachineBlackBoard _bb;
+    private Gravity _gravity;
 
     // =========================================== necessary var ===========================================
     // state instance
@@ -37,7 +33,7 @@ public class PlayerStateMachine : MonoBehaviour
     private State _currentState;
 
     // input var
-    public enum INPUT { MOVEMUL, MOVEDIR, JUMPI, ROLLI, ATTACKI }
+    private Vector3 _movement;
     private Vector3 _movementMultiplier;
     private Vector3 _movementDirection;
     private bool _runInput;
@@ -45,17 +41,20 @@ public class PlayerStateMachine : MonoBehaviour
     private bool _rollInput;
     private bool _attackInput;
 
+    [Header("Movement State")]
+    [SerializeField] private float _walkSpeed = 3f;
+    [SerializeField] private float _runSpeed = 6f;
 
-    [Header("Adjust Player Stat")]
-    public float WalkSpeed = 3f;
-    public float RunSpeed = 6f;
-    public float JumpSpeed = 1f;
-
-    [Header("Debug")]
-    public bool DebugMode = false;
+    [Header("Jump State")]
+    [SerializeField] private float _maxJumpHeight = 4f;
+    [SerializeField] private float _maxJumpTime = 0.5f;
+    private float _initialJumpVelocity;
+    private bool _isGrounded;
+    private bool _isFalling;
 
     // =========================================== setter and getter ===========================================
-    // input getter and setter
+    // input 
+    public Vector3 Movement { get { return _movement; } }
     public float MovementMultiplierX { get { return _movementMultiplier.x; } set { _movementMultiplier.x = value; } }
     public float MovementMultiplierY { get { return _movementMultiplier.y; } set { _movementMultiplier.y = value; } }
     public Vector3 MovementDirection { get { return _movementDirection; } set { _movementDirection = value; } }
@@ -63,18 +62,27 @@ public class PlayerStateMachine : MonoBehaviour
     public bool JumpInput { get { return _jumpInput; } set { _jumpInput = value; } }
     public bool RollInput { get { return _rollInput; } set { _rollInput = value; } }
     public bool AttackInput { get { return _attackInput; } set { _attackInput = value; } }
+    // state variable 
+    public float WalkSpeed { get { return _walkSpeed; } }
+    public float RunSpeed { get { return _runSpeed; } }
+    public float MaxJumpHeight { get { return _maxJumpHeight; } }
+    public float MaxJumpTime { get { return _maxJumpTime; } }
+    public float InitialJumpVelocity { get { return _initialJumpVelocity; } set { _initialJumpVelocity = value; } }
+    public bool IsGrounded { get { return _isGrounded; } set { _isGrounded = value; } }
+    public bool IsFalling { get { return _isFalling; } set { _isFalling = value; } }
 
     void Awake()
     {
         _bb = GetComponent<StateMachineBlackBoard>();
+        _gravity = GetComponent<Gravity>();
     }
 
     void Start()
     {
         _idle = new Idle(_bb);
-        _walk = new Walk(_bb, WalkSpeed);
-        _run = new Run(_bb, RunSpeed);
-        _jump = new Jump(_bb, JumpSpeed);
+        _walk = new Walk(_bb, _walkSpeed);
+        _run = new Run(_bb, _runSpeed);
+        _jump = new Jump(_bb, _initialJumpVelocity);
         _attack = new Attack(_bb);
         _currentState = _idle;
     }
@@ -85,15 +93,16 @@ public class PlayerStateMachine : MonoBehaviour
         _currentState.OnUpdate();
 
         // movement
-        Vector3 completeMovement = new Vector3(
+        _movement = new Vector3(
             _movementDirection.x * _movementMultiplier.x,
             _movementDirection.y * _movementMultiplier.y,
             0
         );
         // the only .Move() exist in entire system, should be here (prevent unnecessary .Move())
-        _bb.CharacterController.Move(completeMovement * Time.deltaTime);
+        _bb.CharacterController.Move(_movement * Time.deltaTime);
 
-        ManageDebug();
+        // apply gravity after .Move()
+        _gravity.ApplyGravity();
     }
 
     public State GetCurrentState()
@@ -114,11 +123,4 @@ public class PlayerStateMachine : MonoBehaviour
         else if (s == STATE.ATTACK) _currentState = _attack;
     }
 
-    private void ManageDebug()
-    {
-        if (!DebugMode) return;
-
-        Debug.Log("MovementDirection: " + MovementDirection);
-    }
 }
-

@@ -35,7 +35,7 @@ public class Walk : State
             base.SwitchState();
         }
 
-        else if (_playerStateMachine.JumpInput)
+        else if (_playerStateMachine.IsGrounded && _playerStateMachine.JumpInput)
         {
             _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.JUMP);
             base.SwitchState();
@@ -63,7 +63,6 @@ public class Walk : State
         // Get target rotation
         Vector3 dir = new Vector3(_playerStateMachine.MovementDirection.x, 0, 0);
         Quaternion targetRotation = Quaternion.LookRotation(dir);
-        Debug.Log("targetRotation: " + targetRotation);
 
         // Smoothly rotate
         _playerStateMachine.transform.rotation = Quaternion.Slerp(

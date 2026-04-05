@@ -8,14 +8,14 @@ using UnityEngine;
 public abstract class State
 {
     protected Animator _animator;
-    protected CharacterController _characterController;
     protected PlayerStateMachine _playerStateMachine;
+    protected PlayerDebug _playerDebug;
 
     public State(StateMachineBlackBoard bb)
     {
         _animator = bb.Animator;
-        _characterController = bb.CharacterController;
         _playerStateMachine = bb.PlayerStateMachine;
+        _playerDebug = bb.PlayerDebug;
     }
 
     protected virtual void OnEnter() {  }
@@ -35,7 +35,8 @@ public abstract class State
 
         State newState = _playerStateMachine.GetCurrentState();
 
-        Debug.Log("Switch State to: " + newState);
+        if (_playerDebug.DebugState.IsDebugEnabled(DebugEntryKEY.SwitchState)) 
+            Debug.Log("Switch State to: " + newState);
 
         newState.OnEnter();
     }

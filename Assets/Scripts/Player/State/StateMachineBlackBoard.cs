@@ -12,8 +12,9 @@ using UnityEngine;
 /// 2.keep dependency for each State => so we can send the dependency to each state easily
 /// 3.this also act as a temporaliry glue between script
 ///     3.1 glue between "InputController" and "PlatformerInputProcessor" (now, not anymore)
-///     3.2 glue betwen "Attack State" and "AttackComboData"
-///     3.3 glue between "PlayerStateMachine" and "Gravity"
+///     3.2 glue betwen "Attack State" and "PlayerAttackManager" (now, not anymore)
+///     3.3 glue between "PlayerStateMachine" and "Gravity" (now, not anymore)
+///     3.4 glue between "PlayerStateMachine" and "Concrete State"
 /// </summary>
 public class StateMachineBlackBoard : MonoBehaviour
 {
@@ -22,8 +23,11 @@ public class StateMachineBlackBoard : MonoBehaviour
     private CharacterController _characterController;
     private Animator _animator;
     private InputController _inputController;
-    private AttackComboData _attackComboData;
+    private PlayerAttackManager _PlayerAttackManager;
+    private AttackBuffer _attackBuffer;
     private Gravity _gravity;
+    private PlayerDebug _playerDebug;
+    [SerializeField] private CollisionCreater _CollisionCreater;
 
     // ============================== setter and getter ==============================
     // component getter
@@ -31,12 +35,11 @@ public class StateMachineBlackBoard : MonoBehaviour
     public CharacterController CharacterController { get { return _characterController; } }
     public Animator Animator { get { return _animator; } }
     public InputController InputController { get { return _inputController; } }
-    public AttackComboData AttackComboData { get { return _attackComboData; } }
+    public PlayerAttackManager PlayerAttackManager { get { return _PlayerAttackManager; } }
+    public AttackBuffer AttackBuffer { get { return _attackBuffer; } }
     public Gravity Gravity { get { return _gravity; } }
-
-    // ============================== debug ==============================
-    public bool Debug_chracterController = false;
-
+    public CollisionCreater CollisionCreater { get { return _CollisionCreater; } }
+    public PlayerDebug PlayerDebug { get { return _playerDebug; } }
 
     void Awake()
     {
@@ -44,26 +47,9 @@ public class StateMachineBlackBoard : MonoBehaviour
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
         _inputController = GetComponent<InputController>();
-        _attackComboData = GetComponent<AttackComboData>();
+        _PlayerAttackManager = GetComponent<PlayerAttackManager>();
+        _attackBuffer = GetComponent<AttackBuffer>();
         _gravity = GetComponent<Gravity>();
-
-    }
-
-    void Update()
-    {
-        DebugManage();
-    }
-
-    void DebugManage()
-    {
-        if (_playerStateMachine.DebugMode)
-        {
-            // Debug.Log("verticalMovement: " + _verticalMovementMultiplier);
-        }
-
-        if (Debug_chracterController)
-        {
-            Debug.Log("CC is grounded: " + _characterController.isGrounded);
-        }
+        _playerDebug = GetComponent<PlayerDebug>();
     }
 }

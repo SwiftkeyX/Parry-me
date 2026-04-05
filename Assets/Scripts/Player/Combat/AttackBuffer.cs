@@ -3,27 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Reusable 
+/// Reusable
 /// 
 /// Role?
-/// 1.to keep AttackSO
-/// 2.to apply new AnimatorOverrideController to existing Animator during runtime
-/// 3.to calucalate attack timer
+/// calculate "Is Attack buffer" for the player
+/// 
+/// How?
+/// 1.use Coroutine to time when the combo should stop 
+///     (if attack in this time, the combo will reset => start from first attack again)
+/// 2.use "chainAttack" as a timer to prevent current attack animation end early 
+///     (next attack can override current animation by accident).
 /// </summary>
-public class AttackComboData : MonoBehaviour
+public class AttackBuffer : MonoBehaviour
 {
-    [SerializeField] private List<AttackSO> _attackSO;
+    private List<AttackBufferData> _data;
     private Animator _animator;
 
+    // attack buffer var
     private int _comboNumber;
     private float _lastClickedTime;
     private bool _isAttackFinish;
-    private float _animationFinish = 0.9f;
     private Coroutine _attackTimer;
     private float _timer;
-
-    // debug
-    public bool debugMode;
 
     // getter and setter
     public int ComboNumber => _comboNumber;
@@ -31,9 +32,13 @@ public class AttackComboData : MonoBehaviour
     public Coroutine GetAttackTimer => _attackTimer;
     public float Timer => _timer;
 
+    // getter and setter
+    public List<AttackBufferData> Data { get { return _data; } }   
+
     void Awake()
     {
         _animator = GetComponent<Animator>();
+        _data = new List<AttackBufferData>();
     }
 
     void Start()
@@ -43,36 +48,36 @@ public class AttackComboData : MonoBehaviour
         _isAttackFinish = true;
     }
 
-    void Update()
-    {
-
-    }
-
     // logic to allow the current attack to chain to next attack
-    public void Attack()
+    public bool Attack()
     {
-        if (_comboNumber >= _attackSO.Count) return;
+        if (_comboNumber >= _data.Count) return false;
 
         // calculate attack buffer
         bool isAttackBuffer;
         if (_comboNumber == 0) isAttackBuffer = true;
-        else isAttackBuffer = (Time.time - _lastClickedTime >= _attackSO[_comboNumber - 1].chainAttack);
+        else isAttackBuffer = (Time.time - _lastClickedTime >= _data[_comboNumber - 1].chainAttack);
 
         // play attack animation
         if (isAttackBuffer)
         {
-            // start the attack timer, if timer is run out => call AttackEnd()
             // reset the attack timer, if player continue attack => AttackEnd() won't be called  
             if (_attackTimer != null) StopCoroutine(_attackTimer);
-            _attackTimer = StartCoroutine(AttackTimer(_attackSO[_comboNumber].attackTimer));
+            // start the attack timer, if timer is run out => call AttackEnd()
+            _attackTimer = StartCoroutine(AttackTimer(_data[_comboNumber].attackTimer));
 
-            _animator.runtimeAnimatorController = _attackSO[_comboNumber].animOV;
+            // play animation
+            _animator.runtimeAnimatorController = _data[_comboNumber].animOV;
             _animator.CrossFade("Attack", 0.1f, 0, 0f);
 
+            // update flag
             _comboNumber++;
             _lastClickedTime = Time.time;
             _isAttackFinish = false;
+            return true;
         }
+
+        return false;
     }
 
     // reset var when attack end
@@ -99,3 +104,22 @@ public class AttackComboData : MonoBehaviour
 
 }
 
+// keep necessary variable to calculate attack buffer
+public class AttackBufferData
+{
+    // over write previous attack animation
+    public AnimatorOverrideController animOV;
+
+    // time: use in logic that allow player to chain the attack (a1 => a2 => a3) 
+    public float chainAttack;
+
+    // time: use in same logic as "chainAttack"
+    public float attackTimer;
+
+    public AttackBufferData(AnimatorOverrideController anim, float chain, float timer)
+    {
+        animOV = anim;
+        chainAttack = chain;
+        attackTimer = timer;
+    }
+}
