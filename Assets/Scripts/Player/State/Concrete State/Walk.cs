@@ -1,74 +1,77 @@
 using UnityEngine;
-
-public class Walk : State
+using Entity;
+namespace Player
 {
-    private float _walkSpeed;
-    private float _rotationSpeed;
-
-    public Walk(StateMachineBlackBoard bb, float moveSpeed = 3f, float rotationSpeed = 180f) : base(bb)
+    public class Walk : State<PlayerStateMachine>
     {
-        _walkSpeed = moveSpeed;
-        _rotationSpeed = rotationSpeed;
-    }
+        private float _walkSpeed;
+        private float _rotationSpeed;
 
-    protected override void OnEnter()
-    {
-        base.OnEnter();
-    }
-
-    public override void OnUpdate()
-    {
-        base.OnUpdate();
-
-        _animator.SetFloat("MoveSpeed", _walkSpeed, 0.1f, Time.deltaTime);
-
-        _playerStateMachine.MovementMultiplierX = _walkSpeed;
-
-        RotateTowardMoveDirection();
-    }
-
-    protected override void CheckSwitchState()
-    {
-        if (_playerStateMachine.AttackInput)
+        public Walk(StateMachineBlackBoard<PlayerStateMachine> bb, float moveSpeed = 3f, float rotationSpeed = 180f) : base(bb)
         {
-            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.ATTACK);
-            base.SwitchState();
+            _walkSpeed = moveSpeed;
+            _rotationSpeed = rotationSpeed;
         }
 
-        else if (_playerStateMachine.IsGrounded && _playerStateMachine.JumpInput)
+        protected override void OnEnter()
         {
-            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.JUMP);
-            base.SwitchState();
+            base.OnEnter();
         }
 
-        else if (_playerStateMachine.MovementDirection.x == 0f)
+        public override void OnUpdate()
         {
-            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.IDLE);
-            base.SwitchState();
+            base.OnUpdate();
+
+            _animator.SetFloat("MoveSpeed", _walkSpeed, 0.1f, Time.deltaTime);
+
+            _stateMachine.MovementMultiplierX = _walkSpeed;
+
+            RotateTowardMoveDirection();
         }
 
-        else if (_playerStateMachine.MovementDirection.x != 0f && _playerStateMachine.RunInput)
+        protected override void CheckSwitchState()
         {
-            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.RUN);
-            base.SwitchState();
+            if (_stateMachine.AttackInput)
+            {
+                _stateMachine.ChangeCurrentState(PlayerStateMachine.STATE.ATTACK);
+                base.SwitchState();
+            }
+
+            else if (_stateMachine.IsGrounded && _stateMachine.JumpInput)
+            {
+                _stateMachine.ChangeCurrentState(PlayerStateMachine.STATE.JUMP);
+                base.SwitchState();
+            }
+
+            else if (_stateMachine.MovementDirection.x == 0f)
+            {
+                _stateMachine.ChangeCurrentState(PlayerStateMachine.STATE.IDLE);
+                base.SwitchState();
+            }
+
+            else if (_stateMachine.MovementDirection.x != 0f && _stateMachine.RunInput)
+            {
+                _stateMachine.ChangeCurrentState(PlayerStateMachine.STATE.RUN);
+                base.SwitchState();
+            }
+
         }
 
-    }
+        private void RotateTowardMoveDirection()
+        {
+            // prevent character from rotate the wrong way
+            if (_stateMachine.MovementDirection.x == 0f) return;
 
-    private void RotateTowardMoveDirection()
-    {
-        // prevent character from rotate the wrong way
-        if (_playerStateMachine.MovementDirection.x == 0f) return;
+            // Get target rotation
+            Vector3 dir = new Vector3(_stateMachine.MovementDirection.x, 0, 0);
+            Quaternion targetRotation = Quaternion.LookRotation(dir);
 
-        // Get target rotation
-        Vector3 dir = new Vector3(_playerStateMachine.MovementDirection.x, 0, 0);
-        Quaternion targetRotation = Quaternion.LookRotation(dir);
-
-        // Smoothly rotate
-        _playerStateMachine.transform.rotation = Quaternion.Slerp(
-            _playerStateMachine.transform.rotation,
-            targetRotation,
-            _rotationSpeed * Time.deltaTime
-        );
+            // Smoothly rotate
+            _stateMachine.transform.rotation = Quaternion.Slerp(
+                _stateMachine.transform.rotation,
+                targetRotation,
+                _rotationSpeed * Time.deltaTime
+            );
+        }
     }
 }

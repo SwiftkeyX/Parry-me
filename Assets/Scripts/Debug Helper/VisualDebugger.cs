@@ -6,30 +6,33 @@ using UnityEngine;
 /// 
 /// 1.to debug AttackCombaoData of the player (using TMP)
 /// </summary>
-public class VisualDebugger : MonoBehaviour
+namespace Player
 {
-    [SerializeField] private TextMeshProUGUI debug_textUI;
-    private PlayerAttackManager _PlayerAttackManager;
-
-    void Awake()
+    public class VisualDebugger : MonoBehaviour
     {
-        _PlayerAttackManager = GetComponent<PlayerAttackManager>();
+        [SerializeField] private TextMeshProUGUI debug_textUI;
+        private PlayerAttackManager _PlayerAttackManager;
+
+        void Awake()
+        {
+            _PlayerAttackManager = GetComponent<PlayerAttackManager>();
+        }
+
+        // void Start()
+        // {
+        //     // turn on/off TMP (text mesh pro) depend on script's debug mode
+        //     if (!_PlayerAttackManager.debugMode) debug_textUI.enabled = false;
+        // }
+
+        // void Update()
+        // {
+        //     if (_PlayerAttackManager.debugMode)
+        //     {
+        //         debug_textUI.text
+        //         = "timer: " + _PlayerAttackManager.Timer.ToString("F3") + "\n" +
+        //         "ComboNumber: " + _PlayerAttackManager.ComboNumber + "\n" +
+        //         "IsAttackFinish: " + _PlayerAttackManager.IsAttackFinish;
+        //     }
+        // }
     }
-
-    // void Start()
-    // {
-    //     // turn on/off TMP (text mesh pro) depend on script's debug mode
-    //     if (!_PlayerAttackManager.debugMode) debug_textUI.enabled = false;
-    // }
-
-    // void Update()
-    // {
-    //     if (_PlayerAttackManager.debugMode)
-    //     {
-    //         debug_textUI.text
-    //         = "timer: " + _PlayerAttackManager.Timer.ToString("F3") + "\n" +
-    //         "ComboNumber: " + _PlayerAttackManager.ComboNumber + "\n" +
-    //         "IsAttackFinish: " + _PlayerAttackManager.IsAttackFinish;
-    //     }
-    // }
 }

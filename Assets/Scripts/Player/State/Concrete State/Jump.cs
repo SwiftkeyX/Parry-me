@@ -1,90 +1,92 @@
 using UnityEngine;
-
+using Entity;
 /// <summary>
 /// include Jump and Falling animation
 /// </summary>
-public class Jump : State
+namespace Player
 {
-    private float _jumpForce;
-    private bool _jumpOnce;
-
-    public Jump(StateMachineBlackBoard bb, float jumpForce = 1f) : base(bb)
+    public class Jump : State<PlayerStateMachine>
     {
-        _jumpForce = jumpForce;
-    }
+        private float _jumpForce;
+        private bool _jumpOnce;
 
-    protected override void OnEnter()
-    {
-        base.OnEnter();
-
-        _animator.CrossFade("jump", 0.05f);
-
-        _animator.SetBool("Grounded", false);
-
-        _jumpOnce = false;
-    }
-
-    public override void OnUpdate()
-    {
-        base.OnUpdate();
-
-        DoTheJump();
-    }
-
-    protected override void OnExit()
-    {
-        base.OnExit();
-
-        _animator.SetBool("Grounded", true);
-    }
-
-    protected override void CheckSwitchState()
-    {
-        if (!_jumpOnce || !_playerStateMachine.IsGrounded)
+        public Jump(StateMachineBlackBoard<PlayerStateMachine> bb, float jumpForce = 1f) : base(bb)
         {
-            return;
+            _jumpForce = jumpForce;
         }
 
-        if (_playerStateMachine.AttackInput)
+        protected override void OnEnter()
         {
-            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.ATTACK);
-            base.SwitchState();
+            base.OnEnter();
+
+            _animator.CrossFade("jump", 0.05f);
+
+            _animator.SetBool("Grounded", false);
+
+            _jumpOnce = false;
         }
 
-        else if (_playerStateMachine.MovementDirection.x == 0f)
+        public override void OnUpdate()
         {
-            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.IDLE);
-            base.SwitchState();
+            base.OnUpdate();
+
+            DoTheJump();
         }
 
-        else if (_playerStateMachine.MovementDirection.x != 0f && !_playerStateMachine.RunInput)
+        protected override void OnExit()
         {
-            Debug.Log("I am here");
-            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.WALK);
-            base.SwitchState();
+            base.OnExit();
+
+            _animator.SetBool("Grounded", true);
         }
 
-        else if (_playerStateMachine.MovementDirection.x != 0f && _playerStateMachine.RunInput)
+        protected override void CheckSwitchState()
         {
-            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.RUN);
-            base.SwitchState();
+            if (!_jumpOnce || !_stateMachine.IsGrounded)
+            {
+                return;
+            }
+
+            if (_stateMachine.AttackInput)
+            {
+                _stateMachine.ChangeCurrentState(PlayerStateMachine.STATE.ATTACK);
+                base.SwitchState();
+            }
+
+            else if (_stateMachine.MovementDirection.x == 0f)
+            {
+                _stateMachine.ChangeCurrentState(PlayerStateMachine.STATE.IDLE);
+                base.SwitchState();
+            }
+
+            else if (_stateMachine.MovementDirection.x != 0f && !_stateMachine.RunInput)
+            {
+                _stateMachine.ChangeCurrentState(PlayerStateMachine.STATE.WALK);
+                base.SwitchState();
+            }
+
+            else if (_stateMachine.MovementDirection.x != 0f && _stateMachine.RunInput)
+            {
+                _stateMachine.ChangeCurrentState(PlayerStateMachine.STATE.RUN);
+                base.SwitchState();
+            }
+
         }
 
-    }
-
-    private void DoTheJump()
-    {
-        if (_jumpOnce) return;
-
-        AnimatorStateInfo info = _animator.GetCurrentAnimatorStateInfo(0);
-        bool inJumpAnimatorState = info.IsTag("Jump");
-        bool inJumpWindow = (info.normalizedTime > 0.4);
-
-        if (inJumpWindow && inJumpAnimatorState)
+        private void DoTheJump()
         {
-            _playerStateMachine.MovementMultiplierY = _jumpForce / 2f;
-            _jumpOnce = true;
-        }
+            if (_jumpOnce) return;
 
+            AnimatorStateInfo info = _animator.GetCurrentAnimatorStateInfo(0);
+            bool inJumpAnimatorState = info.IsTag("Jump");
+            bool inJumpWindow = (info.normalizedTime > 0.4);
+
+            if (inJumpWindow && inJumpAnimatorState)
+            {
+                _stateMachine.MovementMultiplierY = _jumpForce / 2f;
+                _jumpOnce = true;
+            }
+
+        }
     }
 }

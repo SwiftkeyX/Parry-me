@@ -1,56 +1,60 @@
 using UnityEngine;
-
+using Entity;
 /// <summary>
 /// all the concrete state that inherit from base state
 /// which include Idle/ Walk/ Run/ Attack/ Grounded/ Airborne/ etc..
 /// </summary>
-public class Idle : State
+
+namespace Player
 {
-    private float _idleSpeed;
-
-    public Idle(StateMachineBlackBoard bb, float moveSpeed = 0f) : base(bb)
+    public class Idle : State<PlayerStateMachine>
     {
-        _idleSpeed = moveSpeed;
-    }
+        private float _idleSpeed;
 
-    protected override void OnEnter()
-    {
-        base.OnEnter();
-    }
-
-    public override void OnUpdate()
-    {
-        base.OnUpdate();
-
-        _animator.SetFloat("MoveSpeed", _idleSpeed, 0.1f, Time.deltaTime);
-
-        _playerStateMachine.MovementMultiplierX = _idleSpeed;
-    }
-
-    protected override void CheckSwitchState()
-    {
-        if (_playerStateMachine.AttackInput)
+        public Idle(StateMachineBlackBoard<PlayerStateMachine> bb, float moveSpeed = 0f) : base(bb)
         {
-            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.ATTACK);
-            base.SwitchState();
+            _idleSpeed = moveSpeed;
         }
 
-        else if (_playerStateMachine.IsGrounded && _playerStateMachine.JumpInput)
+        protected override void OnEnter()
         {
-            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.JUMP);
-            base.SwitchState();
+            base.OnEnter();
         }
 
-        else if (_playerStateMachine.MovementDirection.x != 0f && !_playerStateMachine.RunInput)
+        public override void OnUpdate()
         {
-            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.WALK);
-            base.SwitchState();
+            base.OnUpdate();
+
+            _animator.SetFloat("MoveSpeed", _idleSpeed, 0.1f, Time.deltaTime);
+
+            _stateMachine.MovementMultiplierX = _idleSpeed;
         }
 
-        else if (_playerStateMachine.MovementDirection.x != 0f && _playerStateMachine.RunInput)
+        protected override void CheckSwitchState()
         {
-            _playerStateMachine.ChangeCurrentState(PlayerStateMachine.STATE.RUN);
-            base.SwitchState();
+            if (_stateMachine.AttackInput)
+            {
+                _stateMachine.ChangeCurrentState(PlayerStateMachine.STATE.ATTACK);
+                base.SwitchState();
+            }
+
+            else if (_stateMachine.IsGrounded && _stateMachine.JumpInput)
+            {
+                _stateMachine.ChangeCurrentState(PlayerStateMachine.STATE.JUMP);
+                base.SwitchState();
+            }
+
+            else if (_stateMachine.MovementDirection.x != 0f && !_stateMachine.RunInput)
+            {
+                _stateMachine.ChangeCurrentState(PlayerStateMachine.STATE.WALK);
+                base.SwitchState();
+            }
+
+            else if (_stateMachine.MovementDirection.x != 0f && _stateMachine.RunInput)
+            {
+                _stateMachine.ChangeCurrentState(PlayerStateMachine.STATE.RUN);
+                base.SwitchState();
+            }
         }
     }
 }

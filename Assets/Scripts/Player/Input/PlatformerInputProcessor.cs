@@ -9,34 +9,38 @@ using UnityEngine;
 /// role? 
 /// get input and process in a way Platformer should
 /// </summary>
-public class PlatformerInputProcessor : MonoBehaviour
+/// 
+namespace Player
 {
-    private PlayerStateMachine _playerStateMachine;
-    private InputController _inputController;
-
-    void Awake()
+    public class PlatformerInputProcessor : MonoBehaviour
     {
-        _playerStateMachine = GetComponent<PlayerStateMachine>();
-        _inputController = GetComponent<InputController>();
-    }
+        private PlayerStateMachine _playerStateMachine;
+        private InputController _inputController;
 
-    void Update()
-    {
-        ProcessInput();
-    }
+        void Awake()
+        {
+            _playerStateMachine = GetComponent<PlayerStateMachine>();
+            _inputController = GetComponent<InputController>();
+        }
 
-    public void ProcessInput()
-    {
-        // player should be able to walk only left or right
-        // can jump only with jump button
-        // that why z-axis was 0
-        _playerStateMachine.MovementDirection = new Vector3(_inputController.MovementDirection.x, 1, 0);
+        void Update()
+        {
+            ProcessInput();
+        }
 
-        _playerStateMachine.RunInput = _inputController.IsRunPressed;
+        public void ProcessInput()
+        {
+            // player should be able to walk only left or right
+            // can jump only with jump button
+            // that why z-axis was 0
+            _playerStateMachine.MovementDirection = new Vector3(_inputController.MovementDirection.x, 1, 0);
 
-        _playerStateMachine.JumpInput = _inputController.IsJumpPressed;
+            _playerStateMachine.RunInput = _inputController.IsRunPressed;
 
-        _playerStateMachine.AttackInput = _inputController.IsAttackPressed;
+            _playerStateMachine.JumpInput = _inputController.IsJumpPressed;
 
+            _playerStateMachine.AttackInput = _inputController.IsAttackPressed;
+
+        }
     }
 }
