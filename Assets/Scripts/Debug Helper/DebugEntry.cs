@@ -2,14 +2,17 @@
 /// <summary>
 /// Reusable
 /// </summary>
-[System.Serializable]
-public class DebugEntry
+namespace DebugMenu
 {
-    public DebugEntryKEY key;
-    public bool value;
-
-    public DebugEntry(DebugEntryKEY key)
+    [System.Serializable]
+    public class DebugEntry
     {
-        this.key = key;
+        public DebugEntryKEY key;
+        public bool value;
+
+        public DebugEntry(DebugEntryKEY key)
+        {
+            this.key = key;
+        }
     }
 }

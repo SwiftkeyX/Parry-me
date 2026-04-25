@@ -1,3 +1,4 @@
+using DebugMenu;
 using UnityEngine;
 
 /// <summary>
@@ -12,7 +13,7 @@ namespace Entity
     {
         protected Animator _animator;
         protected T _stateMachine;
-        protected PlayerDebugList _debugList;
+        protected BaseDebugList<T> _debugList;
 
         public BaseState(BaseStateMachineBlackBoard<T> bb)
         {

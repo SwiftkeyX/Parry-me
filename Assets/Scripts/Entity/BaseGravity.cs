@@ -1,4 +1,5 @@
 using UnityEngine;
+using DebugMenu;
 /// <summary>
 /// Reusable
 /// 
@@ -14,7 +15,7 @@ namespace Entity
         // dependency
         private CharacterController _characterController;
         private T _stateMachine;
-        private PlayerDebugList _debugList;
+        private BaseDebugList<T> _debugList;
 
         // necessary var
         private float _defaultGravity = -9.8f;
@@ -26,7 +27,7 @@ namespace Entity
         {
             _characterController = GetComponent<CharacterController>();
             _stateMachine = GetComponent<T>();
-            _debugList = GetComponent<PlayerDebugList>();
+            _debugList = GetComponent<BaseDebugList<T>>();
             CalculateJumpHeight();
         }
 

@@ -83,7 +83,6 @@ namespace Player
             _attack = new Attack(_bb);
             _currentState = _idle;
 
-            Debug.Log("[PlayerStateMachine] currentState: " + _currentState);
         }
 
         /// <summary>

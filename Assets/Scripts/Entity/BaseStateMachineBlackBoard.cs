@@ -1,5 +1,6 @@
 using UnityEngine;
 using Player;
+using DebugMenu;
 /// <summary>
 /// Not Reusable
 /// 
@@ -28,7 +29,7 @@ namespace Entity
         protected T _stateMachine;
         protected CharacterController _characterController;
         protected Animator _animator;
-        protected PlayerDebugList _debugList;
+        protected BaseDebugList<T> _debugList;
         [SerializeField] protected CollisionCreater _CollisionCreater;
 
         // ============================== setter and getter ==============================
@@ -38,14 +39,14 @@ namespace Entity
         public Animator Animator { get { return _animator; } }
 
         public CollisionCreater CollisionCreater { get { return _CollisionCreater; } }
-        public PlayerDebugList DebugList { get { return _debugList; } }
+        public BaseDebugList<T> DebugList { get { return _debugList; } }
 
         protected virtual void Awake()
         {
             _stateMachine = GetComponent<T>();
             _characterController = GetComponent<CharacterController>();
             _animator = GetComponent<Animator>();
-            _debugList = GetComponent<PlayerDebugList>();
+            _debugList = GetComponent<BaseDebugList<T>>();
         }
     }
 

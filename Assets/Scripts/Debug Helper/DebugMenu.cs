@@ -21,22 +21,25 @@ using System.Collections.Generic;
 /// Look at DebugEntryKey for more info.
 /// 
 /// </summary>
-[System.Serializable]
-public class DebugMenu
+namespace DebugMenu
 {
-    public Dictionary<DebugEntryKEY, bool> dict = new Dictionary<DebugEntryKEY, bool>();
-
-    public DebugMenu(List<DebugEntry> list)
+    [System.Serializable]
+    public class DebugMenu
     {
-        for (int i = 0; i < list.Count; i++)
+        public Dictionary<DebugEntryKEY, bool> dict = new Dictionary<DebugEntryKEY, bool>();
+
+        public DebugMenu(List<DebugEntry> list)
         {
-            dict.Add(list[i].key, list[i].value);
+            for (int i = 0; i < list.Count; i++)
+            {
+                dict.Add(list[i].key, list[i].value);
+            }
         }
-    }
 
-    public bool IsDebugEnabled(DebugEntryKEY key)
-    {
-        bool isEnabled;
-        return dict.TryGetValue(key, out isEnabled) && isEnabled;
+        public bool IsDebugEnabled(DebugEntryKEY key)
+        {
+            bool isEnabled;
+            return dict.TryGetValue(key, out isEnabled) && isEnabled;
+        }
     }
 }

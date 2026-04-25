@@ -1,4 +1,5 @@
 using DebugMenu;
+using Enemy;
 /// <summary>
 /// not reusable
 /// 
@@ -7,7 +8,7 @@ using DebugMenu;
 /// </summary>
 namespace Player
 {
-    public class PlayerDebugList : BaseDebugList<PlayerStateMachine>
+    public class EnemyDebugList : BaseDebugList<EnemyStateMachine>
     {
 
     }
