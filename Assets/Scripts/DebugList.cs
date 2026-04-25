@@ -1,17 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
-
 /// <summary>
 /// not reusable
 /// 
 /// Role?
 /// glue to use DebugMenu with Player
 /// </summary>
-namespace Player
+namespace Entity
 {
-    public class PlayerDebug : MonoBehaviour
+    public class DebugList<T> : MonoBehaviour where T : StateMachine<T>
     {
-        private PlayerStateMachine _playerStateMachine;
+        private T _playerStateMachine;
 
         [Header("Debug")]
         private DebugMenu _debugMovement;

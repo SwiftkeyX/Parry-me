@@ -1,5 +1,5 @@
 using UnityEngine;
-using Entity;
+using Player;
 /// <summary>
 /// Reusable
 /// 
@@ -8,78 +8,94 @@ using Entity;
 /// 2.calculate appropriate jump height
 /// 3.calculate appropriate gravity
 /// </summary>
-public class Gravity : MonoBehaviour
+namespace Entity
 {
-    // dependency
-    private CharacterController _characterController;
-    private StateMachine _stateMachine;
-    private PlayerDebug _playerDebug;
-
-    // necessary var
-    private float _airborneGravityForce;
-    private float _groundedGravityForce = -1f;
-    private float _fallMultiplier = 2f;
-
-    // 
-
-
-    void Awake()
+    public class Gravity<T> : MonoBehaviour where T : StateMachine<T>
     {
-        _characterController = GetComponent<CharacterController>();
-        _stateMachine = GetComponent<StateMachine>();
-        _playerDebug = GetComponent<PlayerDebug>();
-        CalculateJumpHeight();
-    }
+        // dependency
+        private CharacterController _characterController;
+        private T _stateMachine;
+        private DebugList<T> _debugList;
 
-    private void CalculateJumpHeight()
-    {
-        float timeToHighest = _stateMachine.MaxJumpTime / 2;
-        _airborneGravityForce = (-2 * _stateMachine.MaxJumpHeight) / Mathf.Pow(timeToHighest, 2);
-        _stateMachine.InitialJumpVelocity = (2 * _stateMachine.MaxJumpHeight) / timeToHighest;
-    }
+        // necessary var
+        private float _defaultGravity = -9.8f;
+        private float _airborneGravityForce;
+        private float _groundedGravityForce = -1f;
+        private float _fallMultiplier = 2f;
 
-    public void ApplyGravity()
-    {
-        _stateMachine.IsGrounded = _characterController.isGrounded;
-        _stateMachine.IsFalling = (_stateMachine.Movement.y < 0);
-
-        // character on the ground
-        if (_stateMachine.IsGrounded)
+        void Awake()
         {
-            _stateMachine.MovementMultiplierY = _groundedGravityForce;
-
-            if (_playerDebug.DebugJump.IsDebugEnabled(DebugEntryKEY.GravityForceApply))
-                Debug.Log("Grounded Gravity Force apply");
+            _characterController = GetComponent<CharacterController>();
+            _stateMachine = GetComponent<T>();
+            _debugList = GetComponent<DebugList<T>>();
+            CalculateJumpHeight();
         }
 
-        // character is airbone and falling downward
-        else if (_stateMachine.IsFalling)
+        /// <summary>
+        /// If the current entity can jump, calculate gravity force based on the those variable (MaxJumpHeight, MaxJumpTime).
+        /// If not, then use default gravity force.
+        /// </summary>
+        private void CalculateJumpHeight()
         {
-            float previousYVelocity = _stateMachine.MovementMultiplierY;
-            float newYVelocity = _stateMachine.MovementMultiplierY + (_airborneGravityForce * _fallMultiplier * Time.deltaTime);
-            float nextYVelocity = (previousYVelocity + newYVelocity) / 2;
-            _stateMachine.MovementMultiplierY = nextYVelocity;
+            if (_stateMachine is IJumpable jumpableEntity)
+            {
+                float timeToHighest = jumpableEntity.MaxJumpTime / 2;
+                _airborneGravityForce = (-2 * jumpableEntity.MaxJumpHeight) / Mathf.Pow(timeToHighest, 2);
+                jumpableEntity.InitialJumpVelocity = (2 * jumpableEntity.MaxJumpHeight) / timeToHighest;
+            }
+            else
+            {
+                _airborneGravityForce = _defaultGravity; 
+            }
 
-            if (_playerDebug.DebugJump.IsDebugEnabled(DebugEntryKEY.GravityForceApply))
-                Debug.Log("Airborne Falling GravityForce apply");
-
-            if (_playerDebug.DebugJump.IsDebugEnabled(DebugEntryKEY.PreviousYAndNewY))
-                Debug.Log("previousY: " + previousYVelocity + " newY: " + newYVelocity);
         }
 
-        // character is airbone and jumping upward
-        else
+        /// <summary>
+        /// Apply gravity force based on Entity's position.
+        /// </summary>
+        public void ApplyGravity()
         {
-            float previousYVelocity = _stateMachine.MovementMultiplierY;
-            float newYVelocity = _stateMachine.MovementMultiplierY + (_airborneGravityForce * Time.deltaTime);
-            float nextYVelocity = (previousYVelocity + newYVelocity) / 2;
-            _stateMachine.MovementMultiplierY = nextYVelocity;
+            _stateMachine.IsGrounded = _characterController.isGrounded;
+            _stateMachine.IsFalling = (_stateMachine.Movement.y < 0);
 
-            if (_playerDebug.DebugJump.IsDebugEnabled(DebugEntryKEY.GravityForceApply))
-                Debug.Log("Airborne Jumping GravityForce apply");
+            // character on the ground
+            if (_stateMachine.IsGrounded)
+            {
+                _stateMachine.MovementMultiplierY = _groundedGravityForce;
 
-            if (_playerDebug.DebugJump.IsDebugEnabled(DebugEntryKEY.PreviousYAndNewY))
-                Debug.Log("previousY: " + previousYVelocity + " newY: " + newYVelocity);
+                if (_debugList.DebugJump.IsDebugEnabled(DebugEntryKEY.GravityForceApply))
+                    Debug.Log("Grounded Gravity Force apply");
+            }
+
+            // character is airbone and falling downward
+            else if (_stateMachine.IsFalling)
+            {
+                float previousYVelocity = _stateMachine.MovementMultiplierY;
+                float newYVelocity = _stateMachine.MovementMultiplierY + (_airborneGravityForce * _fallMultiplier * Time.deltaTime);
+                float nextYVelocity = (previousYVelocity + newYVelocity) / 2;
+                _stateMachine.MovementMultiplierY = nextYVelocity;
+
+                if (_debugList.DebugJump.IsDebugEnabled(DebugEntryKEY.GravityForceApply))
+                    Debug.Log("Airborne Falling GravityForce apply");
+
+                if (_debugList.DebugJump.IsDebugEnabled(DebugEntryKEY.PreviousYAndNewY))
+                    Debug.Log("previousY: " + previousYVelocity + " newY: " + newYVelocity);
+            }
+
+            // character is airbone and jumping upward
+            else
+            {
+                float previousYVelocity = _stateMachine.MovementMultiplierY;
+                float newYVelocity = _stateMachine.MovementMultiplierY + (_airborneGravityForce * Time.deltaTime);
+                float nextYVelocity = (previousYVelocity + newYVelocity) / 2;
+                _stateMachine.MovementMultiplierY = nextYVelocity;
+
+                if (_debugList.DebugJump.IsDebugEnabled(DebugEntryKEY.GravityForceApply))
+                    Debug.Log("Airborne Jumping GravityForce apply");
+
+                if (_debugList.DebugJump.IsDebugEnabled(DebugEntryKEY.PreviousYAndNewY))
+                    Debug.Log("previousY: " + previousYVelocity + " newY: " + newYVelocity);
+            }
         }
     }
 }

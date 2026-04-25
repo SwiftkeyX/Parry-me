@@ -18,7 +18,7 @@ using Entity;
 
 namespace Player
 {
-    public class PlayerStateMachine : StateMachine<PlayerStateMachine>
+    public class PlayerStateMachine : StateMachine<PlayerStateMachine>, IJumpable
     {
         // ================================== state var ==================================
         public enum STATE { IDLE, WALK, RUN, JUMP, ATTACK }

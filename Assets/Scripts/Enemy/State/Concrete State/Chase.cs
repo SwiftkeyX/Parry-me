@@ -1,11 +1,17 @@
 using UnityEngine;
+using Entity;
+/// <summary>
+/// all the concrete state that inherit from base state
+/// which include Idle/ Walk/ Run/ Attack/ Grounded/ Airborne/ etc..
+/// </summary>
 
 namespace Enemy
 {
-    public class Chase : State
+    public class Chase : State<EnemyStateMachine>
     {
         private float _moveSpeed;
-        public Chase(StateMachineBlackBoard bb, float moveSpeed = 0f) : base(bb)
+
+        public Chase(StateMachineBlackBoard<EnemyStateMachine> bb, float moveSpeed) : base(bb)
         {
             _moveSpeed = moveSpeed;
         }
@@ -26,25 +32,37 @@ namespace Enemy
 
         protected override void CheckSwitchState()
         {
-            if (_stateMachine.IsTargetFound && _stateMachine.AttackStrategy)
-            {
-                _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.ATTACK);
-                base.SwitchState();
-            }
+            // if (_stateMachine.IsTargetFound && _stateMachine.AttackStrategy)
+            // {
+            //     _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.ATTACK);
+            //     base.SwitchState();
+            // }
 
-            else if (_stateMachine.IsTargetFound && !_stateMachine.IsAggressive)
-            {
-                _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.OBSERVE);
-                base.SwitchState();
-            }
+            // else if (_stateMachine.IsTargetFound && _stateMachine.IsAggressive)
+            // {
+            //     _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.CHASE);
+            //     base.SwitchState();
+            // }
 
-            else if (!_stateMachine.IsTargetFound && _stateMachine.IsGuard)
-            {
-                _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.PATROL);
-                base.SwitchState();
-            }
+            // else if (_stateMachine.IsTargetFound && !_stateMachine.IsAggressive)
+            // {
+            //     _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.OBSERVE);
+            //     base.SwitchState();
+            // }
 
-            else if (!_stateMachine.IsTargetFound && !_stateMachine.IsGuard)
+            // else if (!_stateMachine.IsTargetFound && _stateMachine.IsGuard)
+            // {
+            //     _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.PATROL);
+            //     base.SwitchState();
+            // }
+
+            // // else if (!_stateMachine.IsTargetFound && !_stateMachine.IsGuard)
+            // // {
+            // //     _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.IDLE);
+            // //     base.SwitchState();
+            // // }
+
+            if (!_stateMachine.IsTargetFound && !_stateMachine.IsGuard)
             {
                 _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.IDLE);
                 base.SwitchState();

@@ -12,13 +12,13 @@ namespace Entity
     {
         protected Animator _animator;
         protected T _stateMachine;
-        protected PlayerDebug _playerDebug;
+        protected DebugList<T> _playerDebug;
 
         public State(StateMachineBlackBoard<T> bb)
         {
             _animator = bb.Animator;
             _stateMachine = bb.StateMachine;
-            _playerDebug = bb.PlayerDebug;
+            _playerDebug = bb.DebugList;
         }
 
         protected virtual void OnEnter() { }

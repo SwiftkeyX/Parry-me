@@ -1,5 +1,4 @@
-using UnityEngine;
-using Entity;
+  using Entity;
 namespace Player
 {
     /// <summary>
@@ -7,13 +6,13 @@ namespace Player
     /// </summary>
     public class Attack : State<PlayerStateMachine>
     {
-        private PlayerAttackManager _PlayerAttackManager;
-        private CollisionCreater _CollisionCreater;
+        private PlayerAttackManager _playerAttackManager;
+        private CollisionCreater _collisionCreater;
 
         public Attack(StateMachineBlackBoard<PlayerStateMachine> bb) : base(bb)
         {
-            _PlayerAttackManager = bb.PlayerAttackManager;
-            _CollisionCreater = bb.CollisionCreater;
+            _playerAttackManager = bb.PlayerAttackManager;
+            _collisionCreater = bb.CollisionCreater;
         }
 
         protected override void OnEnter()
@@ -28,7 +27,7 @@ namespace Player
             base.OnUpdate();
 
             // if (_stateMachine.AttackInput) _PlayerAttackManager.Attack();
-            _PlayerAttackManager.Attack(_stateMachine.AttackInput);
+            _playerAttackManager.Attack(_stateMachine.AttackInput);
 
             // player don't move when attacking
             _stateMachine.MovementMultiplierX = 0f;
@@ -40,7 +39,7 @@ namespace Player
 
         protected override void CheckSwitchState()
         {
-            if (!_PlayerAttackManager.AttackBuffer.IsAttackFinish) return;
+            if (!_playerAttackManager.AttackBuffer.IsAttackFinish) return;
 
             if (_stateMachine.MovementDirection.x == 0f)
             {

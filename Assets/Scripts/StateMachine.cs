@@ -6,7 +6,7 @@ namespace Entity
     {
         // ============================== dependency ==============================
         public StateMachineBlackBoard<T> _bb;
-        protected Gravity _gravity;
+        protected Gravity<T> _gravity;
 
         // ============================== state var ==============================
         protected State<T> _currentState;
@@ -31,7 +31,7 @@ namespace Entity
         protected virtual void Awake()
         {
             _bb = GetComponent<StateMachineBlackBoard<T>>();
-            _gravity = GetComponent<Gravity>();
+            _gravity = GetComponent<Gravity<T>>();
         }
 
         protected virtual void Start() { }
