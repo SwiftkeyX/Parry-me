@@ -39,8 +39,7 @@ namespace Entity
         protected virtual void Update()
         {
             // update State
-            Debug.Log("currentState: " + _currentState);
-            _currentState.OnUpdate();
+            _currentState.OnUpdate();   
 
             // movement
             _movement = new Vector3(

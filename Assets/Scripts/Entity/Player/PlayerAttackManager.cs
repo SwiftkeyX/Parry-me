@@ -15,18 +15,18 @@ namespace Player
     public class PlayerAttackManager : MonoBehaviour
     {
         [SerializeField] private List<AttackSO> _attackSO;
-        private AttackBuffer _attackBuffer;
+        private PlayerAttackBuffer _attackBuffer;
         private HitboxController _hitboxController;
 
         // var
         int currentAttack = -1;
 
         // setter and getter
-        public AttackBuffer AttackBuffer { get { return _attackBuffer; } }
+        public PlayerAttackBuffer AttackBuffer { get { return _attackBuffer; } }
 
         void Awake()
         {
-            _attackBuffer = GetComponent<AttackBuffer>();
+            _attackBuffer = GetComponent<PlayerAttackBuffer>();
             _hitboxController = GetComponent<HitboxController>();
         }
 

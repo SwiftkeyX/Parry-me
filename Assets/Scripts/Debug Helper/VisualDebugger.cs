@@ -4,7 +4,8 @@ using UnityEngine;
 /// <summary>
 /// not Reusable
 /// 
-/// 1.to debug AttackCombaoData of the player (using TMP)
+/// Role?
+/// 1.to debug AttackCombaoData of the player visually in the scene (using TMP)
 /// </summary>
 namespace Player
 {

@@ -17,7 +17,7 @@ using UnityEngine;
 /// 
 namespace Player
 {
-    public class AttackBuffer : MonoBehaviour
+    public class PlayerAttackBuffer : MonoBehaviour
     {
         private List<AttackBufferData> _data;
         private Animator _animator;
