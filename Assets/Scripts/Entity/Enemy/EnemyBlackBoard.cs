@@ -3,9 +3,8 @@ using Entity;
 
 namespace Enemy
 {
-    public class EnemyBlackBoard : StateMachineBlackBoard<EnemyStateMachine>
+    public class EnemyBlackBoard : BaseStateMachineBlackBoard<EnemyStateMachine>
     {
 
     }
 }
-   

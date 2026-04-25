@@ -15,17 +15,17 @@ using UnityEngine;
 /// </summary>
 namespace Enemy
 {
-    public class EnemyStateMachine : StateMachine<EnemyStateMachine>
+    public class EnemyStateMachine : BaseStateMachine<EnemyStateMachine>
     {
         // =========================================== necessary var ===========================================
         // state instance
         public enum STATE { IDLE, CHASE, OBSERVE, PATROL, RETREAT, ATTACK }
-        private State<EnemyStateMachine> _idle;
-        private State<EnemyStateMachine> _chase;
-        private State<EnemyStateMachine> _observe;
-        private State<EnemyStateMachine> _patrol;
-        private State<EnemyStateMachine> _retreat;
-        private State<EnemyStateMachine> _attack;
+        private BaseState<EnemyStateMachine> _idle;
+        private BaseState<EnemyStateMachine> _chase;
+        private BaseState<EnemyStateMachine> _observe;
+        private BaseState<EnemyStateMachine> _patrol;
+        private BaseState<EnemyStateMachine> _retreat;
+        private BaseState<EnemyStateMachine> _attack;
 
         // ================================== movement setting ==================================
         [Header("Movement State")]
@@ -86,14 +86,14 @@ namespace Enemy
 
 
         #region StateManagement
-        public override State<EnemyStateMachine> GetCurrentState()
+        public override BaseState<EnemyStateMachine> GetCurrentState()
         {
             return base.GetCurrentState();
         }
 
         public void ChangeCurrentState(STATE s)
         {
-            State<EnemyStateMachine> targetState = s switch
+            BaseState<EnemyStateMachine> targetState = s switch
             {
                 STATE.IDLE => _idle,
                 STATE.CHASE => _chase,

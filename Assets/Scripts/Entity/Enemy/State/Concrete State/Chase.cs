@@ -7,11 +7,11 @@ using Entity;
 
 namespace Enemy
 {
-    public class Chase : State<EnemyStateMachine>
+    public class Chase : BaseState<EnemyStateMachine>
     {
         private float _moveSpeed;
 
-        public Chase(StateMachineBlackBoard<EnemyStateMachine> bb, float moveSpeed) : base(bb)
+        public Chase(BaseStateMachineBlackBoard<EnemyStateMachine> bb, float moveSpeed) : base(bb)
         {
             _moveSpeed = moveSpeed;
         }

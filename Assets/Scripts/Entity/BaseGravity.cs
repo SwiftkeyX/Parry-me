@@ -9,7 +9,7 @@ using UnityEngine;
 /// </summary>
 namespace Entity
 {
-    public abstract class Gravity<T> : MonoBehaviour where T : StateMachine<T>
+    public abstract class BaseGravity<T> : MonoBehaviour where T : BaseStateMachine<T>
     {
         // dependency
         private CharacterController _characterController;
@@ -26,7 +26,7 @@ namespace Entity
         {
             _characterController = GetComponent<CharacterController>();
             _stateMachine = GetComponent<T>();
-            _debugList = GetComponent<PlayerDebugList>(); 
+            _debugList = GetComponent<PlayerDebugList>();
             CalculateJumpHeight();
         }
 

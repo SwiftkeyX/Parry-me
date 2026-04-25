@@ -4,7 +4,7 @@ namespace Player
     /// <summary>
     /// how do I make Attack combo ?
     /// </summary>
-    public class Attack : State<PlayerStateMachine>
+    public class Attack : BaseState<PlayerStateMachine>
     {
         private PlayerAttackManager _playerAttackManager;
         private CollisionCreater _collisionCreater;

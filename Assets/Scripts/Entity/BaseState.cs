@@ -8,13 +8,13 @@ using UnityEngine;
 
 namespace Entity
 {
-    public abstract class State<T> where T : StateMachine<T>
+    public abstract class BaseState<T> where T : BaseStateMachine<T>
     {
         protected Animator _animator;
         protected T _stateMachine;
         protected PlayerDebugList _debugList;
 
-        public State(StateMachineBlackBoard<T> bb)
+        public BaseState(BaseStateMachineBlackBoard<T> bb)
         {
             _animator = bb.Animator;
             _stateMachine = bb.StateMachine;
@@ -36,7 +36,7 @@ namespace Entity
         {
             this.OnExit();
 
-            State<T> newState = _stateMachine.GetCurrentState();
+            BaseState<T> newState = _stateMachine.GetCurrentState();
 
             if (_debugList.DebugState.IsDebugEnabled(DebugEntryKEY.SwitchState))
                 Debug.Log("Switch State to: " + newState);

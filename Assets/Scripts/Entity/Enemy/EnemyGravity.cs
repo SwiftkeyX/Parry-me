@@ -2,7 +2,7 @@ using Entity;
 
 namespace Enemy
 {
-    public class EnemyGravity : Gravity<EnemyStateMachine>
+    public class EnemyGravity : BaseGravity<EnemyStateMachine>
     {
 
     }

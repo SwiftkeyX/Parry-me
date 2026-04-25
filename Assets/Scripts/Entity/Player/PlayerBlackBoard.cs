@@ -2,7 +2,7 @@ using Entity;
 
 namespace Player
 {
-    public class PlayerBlackBoard : StateMachineBlackBoard<PlayerStateMachine>
+    public class PlayerBlackBoard : BaseStateMachineBlackBoard<PlayerStateMachine>
     {
         // =============================== PlayerStateMachine component var ===============================
         private InputController _inputController;

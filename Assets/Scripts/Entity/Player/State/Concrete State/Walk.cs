@@ -2,7 +2,7 @@ using UnityEngine;
 using Entity;
 namespace Player
 {
-    public class Walk : State<PlayerStateMachine>
+    public class Walk : BaseState<PlayerStateMachine>
     {
         private float _walkSpeed;
         private float _rotationSpeed;

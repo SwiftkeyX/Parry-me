@@ -5,7 +5,7 @@ using Entity;
 /// </summary>
 namespace Player
 {
-    public class Jump : State<PlayerStateMachine>
+    public class Jump : BaseState<PlayerStateMachine>
     {
         private float _jumpForce;
         private bool _jumpOnce;

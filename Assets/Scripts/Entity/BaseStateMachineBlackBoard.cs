@@ -22,7 +22,7 @@ using Player;
 /// 
 namespace Entity
 {
-    public abstract class StateMachineBlackBoard<T> : MonoBehaviour where T : StateMachine<T>
+    public abstract class BaseStateMachineBlackBoard<T> : MonoBehaviour where T : BaseStateMachine<T>
     {
         // =============================== general component var ===============================
         protected T _stateMachine;

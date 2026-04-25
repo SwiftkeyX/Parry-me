@@ -1,6 +1,6 @@
 using Entity;
 using Player;
 
-public class PlayerGravity : Gravity<PlayerStateMachine>
+public class PlayerGravity : BaseGravity<PlayerStateMachine>
 {
 }

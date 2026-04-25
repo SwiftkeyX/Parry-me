@@ -2,14 +2,14 @@ using UnityEngine;
 
 namespace Entity
 {
-    public abstract class StateMachine<T> : MonoBehaviour where T : StateMachine<T>
+    public abstract class BaseStateMachine<T> : MonoBehaviour where T : BaseStateMachine<T>
     {
         // ============================== dependency ==============================
-        public StateMachineBlackBoard<T> _baseBB;   // This should get override by the children.
-        protected Gravity<T> _baseGravity;  // This should also get override by the children.
+        public BaseStateMachineBlackBoard<T> _baseBB;   // This should get override by the children.
+        protected BaseGravity<T> _baseGravity;  // This should also get override by the children.
 
         // ============================== state var ==============================
-        protected State<T> _currentState;
+        protected BaseState<T> _currentState;   
 
         // ============================== movement var ==============================
         protected Vector3 _movement;
@@ -30,8 +30,8 @@ namespace Entity
 
         protected virtual void Awake()
         {
-            _baseBB = GetComponent<StateMachineBlackBoard<T>>();
-            _baseGravity = GetComponent<Gravity<T>>();
+            _baseBB = GetComponent<BaseStateMachineBlackBoard<T>>();
+            _baseGravity = GetComponent<BaseGravity<T>>();
         }
 
         protected virtual void Start() { }
@@ -39,7 +39,7 @@ namespace Entity
         protected virtual void Update()
         {
             // update State
-            _currentState.OnUpdate();   
+            _currentState.OnUpdate();
 
             // movement
             _movement = new Vector3(
@@ -55,11 +55,11 @@ namespace Entity
             _baseGravity.ApplyGravity();
         }
 
-        public virtual State<T> GetCurrentState()
+        public virtual BaseState<T> GetCurrentState()
         {
             return _currentState;
         }
-        public virtual void ChangeCurrentState(State<T> newState)
+        public virtual void ChangeCurrentState(BaseState<T> newState)
         {
             _currentState = newState;
         }

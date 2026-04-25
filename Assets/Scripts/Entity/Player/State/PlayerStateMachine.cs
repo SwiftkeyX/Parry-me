@@ -18,7 +18,7 @@ using Entity;
 
 namespace Player
 {
-    public class PlayerStateMachine : StateMachine<PlayerStateMachine>, IJumpable
+    public class PlayerStateMachine : BaseStateMachine<PlayerStateMachine>, IJumpable
     {
         // ================================== dependency =================================
         public PlayerBlackBoard _bb { get { return (PlayerBlackBoard)base._baseBB; } set { base._baseBB = value; } }
@@ -26,11 +26,11 @@ namespace Player
 
         // ================================== state var ==================================
         public enum STATE { IDLE, WALK, RUN, JUMP, ATTACK }
-        private State<PlayerStateMachine> _idle;
-        private State<PlayerStateMachine> _walk;
-        private State<PlayerStateMachine> _run;
-        private State<PlayerStateMachine> _jump;
-        private State<PlayerStateMachine> _attack;
+        private BaseState<PlayerStateMachine> _idle;
+        private BaseState<PlayerStateMachine> _walk;
+        private BaseState<PlayerStateMachine> _run;
+        private BaseState<PlayerStateMachine> _jump;
+        private BaseState<PlayerStateMachine> _attack;
 
         // ================================== input var ==================================
         private bool _runInput;
@@ -95,14 +95,14 @@ namespace Player
         }
 
         #region StateManagement
-        public override State<PlayerStateMachine> GetCurrentState()
+        public override BaseState<PlayerStateMachine> GetCurrentState()
         {
             return base.GetCurrentState();
         }
 
         public void ChangeCurrentState(STATE s)
         {
-            State<PlayerStateMachine> targetState = s switch
+            BaseState<PlayerStateMachine> targetState = s switch
             {
                 STATE.IDLE => _idle,
                 STATE.WALK => _walk,

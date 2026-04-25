@@ -7,7 +7,7 @@ using Entity;
 
 namespace Player
 {
-    public class Idle : State<PlayerStateMachine>
+    public class Idle : BaseState<PlayerStateMachine>
     {
         private float _idleSpeed;
 
