@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Player;
 using UnityEngine;
 /// <summary>
 /// not reusable
@@ -8,9 +9,9 @@ using UnityEngine;
 /// </summary>
 namespace Entity
 {
-    public class DebugList<T> : MonoBehaviour where T : StateMachine<T>
+    public class PlayerDebugList : MonoBehaviour
     {
-        private T _playerStateMachine;
+        private PlayerStateMachine _playerStateMachine;
 
         [Header("Debug")]
         private DebugMenu _debugMovement;
@@ -32,6 +33,7 @@ namespace Entity
         void Awake()
         {
             // dependency
+            _playerStateMachine = GetComponent<PlayerStateMachine>();
 
             // debug
             _debugMovement = new DebugMenu(DebugMovementInfo);

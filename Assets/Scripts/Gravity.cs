@@ -1,5 +1,4 @@
 using UnityEngine;
-using Player;
 /// <summary>
 /// Reusable
 /// 
@@ -10,12 +9,12 @@ using Player;
 /// </summary>
 namespace Entity
 {
-    public class Gravity<T> : MonoBehaviour where T : StateMachine<T>
+    public abstract class Gravity<T> : MonoBehaviour where T : StateMachine<T>
     {
         // dependency
         private CharacterController _characterController;
         private T _stateMachine;
-        private DebugList<T> _debugList;
+        private PlayerDebugList _debugList;
 
         // necessary var
         private float _defaultGravity = -9.8f;
@@ -27,7 +26,7 @@ namespace Entity
         {
             _characterController = GetComponent<CharacterController>();
             _stateMachine = GetComponent<T>();
-            _debugList = GetComponent<DebugList<T>>();
+            _debugList = GetComponent<PlayerDebugList>(); 
             CalculateJumpHeight();
         }
 
@@ -45,7 +44,7 @@ namespace Entity
             }
             else
             {
-                _airborneGravityForce = _defaultGravity; 
+                _airborneGravityForce = _defaultGravity;
             }
 
         }

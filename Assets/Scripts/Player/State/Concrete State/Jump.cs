@@ -10,7 +10,7 @@ namespace Player
         private float _jumpForce;
         private bool _jumpOnce;
 
-        public Jump(StateMachineBlackBoard<PlayerStateMachine> bb, float jumpForce = 1f) : base(bb)
+        public Jump(PlayerBlackBoard bb, float jumpForce = 1f) : base(bb)
         {
             _jumpForce = jumpForce;
         }

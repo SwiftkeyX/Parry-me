@@ -1,5 +1,4 @@
 using UnityEngine;
-using Entity;
 using Player;
 /// <summary>
 /// Not Reusable
@@ -23,47 +22,30 @@ using Player;
 /// 
 namespace Entity
 {
-    public class StateMachineBlackBoard<T> : MonoBehaviour where T : StateMachine<T>
+    public abstract class StateMachineBlackBoard<T> : MonoBehaviour where T : StateMachine<T>
     {
         // =============================== general component var ===============================
-        private T _stateMachine;
-        private CharacterController _characterController;
-        private Animator _animator;
-        private Gravity<T> _gravity;
-        private DebugList<T> _debugList;
-        [SerializeField] private CollisionCreater _CollisionCreater;
-
-        // =============================== PlayerStateMachine component var ===============================
-        private InputController _inputController;
-        private PlayerAttackManager _playerAttackManager;
-        private AttackBuffer _attackBuffer;
+        protected T _stateMachine;
+        protected CharacterController _characterController;
+        protected Animator _animator;
+        protected PlayerDebugList _debugList;
+        [SerializeField] protected CollisionCreater _CollisionCreater;
 
         // ============================== setter and getter ==============================
         // component getter
         public T StateMachine { get { return _stateMachine; } }
         public CharacterController CharacterController { get { return _characterController; } }
         public Animator Animator { get { return _animator; } }
-        public InputController InputController { get { return _inputController; } }
-        public PlayerAttackManager PlayerAttackManager { get { return _playerAttackManager; } }
-        public AttackBuffer AttackBuffer { get { return _attackBuffer; } }
-        public Gravity<T> Gravity { get { return _gravity; } }
-        public CollisionCreater CollisionCreater { get { return _CollisionCreater; } }
-        public DebugList<T> DebugList { get { return _debugList; } }
 
-        void Awake()
+        public CollisionCreater CollisionCreater { get { return _CollisionCreater; } }
+        public PlayerDebugList DebugList { get { return _debugList; } }
+
+        protected virtual void Awake()
         {
             _stateMachine = GetComponent<T>();
             _characterController = GetComponent<CharacterController>();
             _animator = GetComponent<Animator>();
-            _gravity = GetComponent<Gravity<T>>();
-            _debugList = GetComponent<DebugList<T>>();
-
-            if (_stateMachine is PlayerStateMachine a)
-            {
-                _inputController = GetComponent<InputController>();
-                _playerAttackManager = GetComponent<PlayerAttackManager>();
-                _attackBuffer = GetComponent<AttackBuffer>();
-            }
+            _debugList = GetComponent<PlayerDebugList>();
         }
     }
 

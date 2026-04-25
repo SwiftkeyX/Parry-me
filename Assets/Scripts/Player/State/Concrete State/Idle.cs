@@ -11,7 +11,7 @@ namespace Player
     {
         private float _idleSpeed;
 
-        public Idle(StateMachineBlackBoard<PlayerStateMachine> bb, float moveSpeed = 0f) : base(bb)
+        public Idle(PlayerBlackBoard bb, float moveSpeed = 0f) : base(bb)
         {
             _idleSpeed = moveSpeed;
         }

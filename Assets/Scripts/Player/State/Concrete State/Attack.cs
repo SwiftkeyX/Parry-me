@@ -1,4 +1,4 @@
-  using Entity;
+using Entity;
 namespace Player
 {
     /// <summary>
@@ -9,7 +9,7 @@ namespace Player
         private PlayerAttackManager _playerAttackManager;
         private CollisionCreater _collisionCreater;
 
-        public Attack(StateMachineBlackBoard<PlayerStateMachine> bb) : base(bb)
+        public Attack(PlayerBlackBoard bb) : base(bb)
         {
             _playerAttackManager = bb.PlayerAttackManager;
             _collisionCreater = bb.CollisionCreater;

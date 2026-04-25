@@ -20,6 +20,10 @@ namespace Player
 {
     public class PlayerStateMachine : StateMachine<PlayerStateMachine>, IJumpable
     {
+        // ================================== dependency =================================
+        public PlayerBlackBoard _bb { get { return (PlayerBlackBoard)base._baseBB; } set { base._baseBB = value; } }
+        protected PlayerGravity _gravity { get { return (PlayerGravity)base._baseGravity; } }
+
         // ================================== state var ==================================
         public enum STATE { IDLE, WALK, RUN, JUMP, ATTACK }
         private State<PlayerStateMachine> _idle;
@@ -62,9 +66,9 @@ namespace Player
         /// </summary>
         protected override void Awake()
         {
-            // ...
-
             base.Awake();
+
+            _bb = GetComponent<PlayerBlackBoard>();
         }
 
         /// <summary>
@@ -78,6 +82,8 @@ namespace Player
             _jump = new Jump(_bb, _initialJumpVelocity);
             _attack = new Attack(_bb);
             _currentState = _idle;
+
+            Debug.Log("[PlayerStateMachine] currentState: " + _currentState);
         }
 
         /// <summary>

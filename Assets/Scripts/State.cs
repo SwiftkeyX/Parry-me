@@ -12,13 +12,13 @@ namespace Entity
     {
         protected Animator _animator;
         protected T _stateMachine;
-        protected DebugList<T> _playerDebug;
+        protected PlayerDebugList _debugList;
 
         public State(StateMachineBlackBoard<T> bb)
         {
             _animator = bb.Animator;
             _stateMachine = bb.StateMachine;
-            _playerDebug = bb.DebugList;
+            _debugList = bb.DebugList;
         }
 
         protected virtual void OnEnter() { }
@@ -38,7 +38,7 @@ namespace Entity
 
             State<T> newState = _stateMachine.GetCurrentState();
 
-            if (_playerDebug.DebugState.IsDebugEnabled(DebugEntryKEY.SwitchState))
+            if (_debugList.DebugState.IsDebugEnabled(DebugEntryKEY.SwitchState))
                 Debug.Log("Switch State to: " + newState);
 
             newState.OnEnter();

@@ -837,16 +837,16 @@ PrefabInstance:
       addedObject: {fileID: 1440000138}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e19187741a17df242a7925fb02382564, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1440000128}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e19187741a17df242a7925fb02382564, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1440000127}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e19187741a17df242a7925fb02382564, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1440000140}
+      addedObject: {fileID: 1440000146}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e19187741a17df242a7925fb02382564, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1440000136}
+      addedObject: {fileID: 1440000148}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e19187741a17df242a7925fb02382564, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1440000140}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e19187741a17df242a7925fb02382564, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1440000131}
@@ -861,7 +861,7 @@ PrefabInstance:
       addedObject: {fileID: 1440000134}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e19187741a17df242a7925fb02382564, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1440000142}
+      addedObject: {fileID: 1440000147}
   m_SourcePrefab: {fileID: 100100000, guid: e19187741a17df242a7925fb02382564, type: 3}
 --- !u!4 &501510579 stripped
 Transform:
@@ -2234,24 +2234,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35b5258938cbd414a8168846c549e079, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bb: {fileID: 1440000128}
+  _baseBB: {fileID: 1440000146}
   _walkSpeed: 3
   _runSpeed: 6
   _maxJumpHeight: 3
   _maxJumpTime: 1
---- !u!114 &1440000128
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1440000117}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1737dc259b7deb43b8d66b77ee63dea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _CollisionCreater: {fileID: 1909942530}
 --- !u!114 &1440000131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2286,18 +2273,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug_textUI: {fileID: 880520267}
---- !u!114 &1440000136
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1440000117}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 843fe10ddd4f0294982d8c2ee61b02b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1440000138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2339,7 +2314,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a2aa45ae697d074a875dd3e336f5c52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1440000142
+--- !u!114 &1440000144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1440000117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb5644837896b1b44b51b21c7f644689, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hitboxGizmo: {fileID: 1909942532}
+  _CollisionCreater: {fileID: 1909942530}
+--- !u!114 &1440000146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1440000117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c7eb43e6530ec341b7f8a787776588f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _CollisionCreater: {fileID: 1909942530}
+--- !u!114 &1440000147
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2371,7 +2373,7 @@ MonoBehaviour:
   DebugCollisionInfo:
   - key: 7
     value: 0
---- !u!114 &1440000144
+--- !u!114 &1440000148
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2380,11 +2382,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1440000117}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb5644837896b1b44b51b21c7f644689, type: 3}
+  m_Script: {fileID: 11500000, guid: e8a78d18f30fa24488c021bb21fe8810, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hitboxGizmo: {fileID: 1909942532}
-  _CollisionCreater: {fileID: 1909942530}
 --- !u!1 &1576989391
 GameObject:
   m_ObjectHideFlags: 0

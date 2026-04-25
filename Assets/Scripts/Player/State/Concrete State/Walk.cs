@@ -7,7 +7,7 @@ namespace Player
         private float _walkSpeed;
         private float _rotationSpeed;
 
-        public Walk(StateMachineBlackBoard<PlayerStateMachine> bb, float moveSpeed = 3f, float rotationSpeed = 180f) : base(bb)
+        public Walk(PlayerBlackBoard bb, float moveSpeed = 3f, float rotationSpeed = 180f) : base(bb)
         {
             _walkSpeed = moveSpeed;
             _rotationSpeed = rotationSpeed;

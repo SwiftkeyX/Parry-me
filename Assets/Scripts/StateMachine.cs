@@ -5,8 +5,8 @@ namespace Entity
     public abstract class StateMachine<T> : MonoBehaviour where T : StateMachine<T>
     {
         // ============================== dependency ==============================
-        public StateMachineBlackBoard<T> _bb;
-        protected Gravity<T> _gravity;
+        public StateMachineBlackBoard<T> _baseBB;   // This should get override by the children.
+        protected Gravity<T> _baseGravity;  // This should also get override by the children.
 
         // ============================== state var ==============================
         protected State<T> _currentState;
@@ -30,8 +30,8 @@ namespace Entity
 
         protected virtual void Awake()
         {
-            _bb = GetComponent<StateMachineBlackBoard<T>>();
-            _gravity = GetComponent<Gravity<T>>();
+            _baseBB = GetComponent<StateMachineBlackBoard<T>>();
+            _baseGravity = GetComponent<Gravity<T>>();
         }
 
         protected virtual void Start() { }
@@ -39,6 +39,7 @@ namespace Entity
         protected virtual void Update()
         {
             // update State
+            Debug.Log("currentState: " + _currentState);
             _currentState.OnUpdate();
 
             // movement
@@ -49,10 +50,10 @@ namespace Entity
             );
 
             // the only .Move() exist in entire system, should be here (prevent unnecessary .Move())
-            _bb.CharacterController.Move(_movement * Time.deltaTime);
+            _baseBB.CharacterController.Move(_movement * Time.deltaTime);
 
             // apply gravity after .Move()
-            _gravity.ApplyGravity();
+            _baseGravity.ApplyGravity();
         }
 
         public virtual State<T> GetCurrentState()

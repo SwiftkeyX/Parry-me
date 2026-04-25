@@ -61,8 +61,8 @@ namespace Enemy
         /// </summary>
         protected override void Start()
         {
-            _idle = new Idle(_bb);
-            _chase = new Chase(_bb, _walkSpeed);
+            _idle = new Idle(_baseBB);
+            _chase = new Chase(_baseBB, _walkSpeed);
             // _observe = new Observe(_bb, _walkSpeed);
             // _patrol = new Patrol();
             // _retreat = new Retreat();
