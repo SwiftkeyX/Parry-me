@@ -18,130 +18,88 @@ namespace Enemy
     /// How?
     /// ...
     /// </summary>
-    //     public class EnemyAttackAI : MonoBehaviour
-    //     {
-    //         [SerializeField] private Deck _masterDeck;
-    //         private List<AttackCard> _availableAttackCard = new();
-    //         private readonly System.Random _random = new();
-    //         private float _meleeRange = 3f;
-
-    //         void Start()
-    //         {
-    //             RefillDeck();
-    //         }
-
-    //         /// <summary>
-    //         /// Draw next card, refill the deck when empty.
-    //         /// </summary>
-    //         /// <param name="distanceToPlayer"></param>
-    //         /// <returns></returns>
-    //         #region Main Logic
-    //         public BaseCard GetNextValidAttackCard(float distanceToPlayer)
-    //         {
-    //             if (_availableAttackCard.Count == 0) RefillDeck();
-
-    //             // 1. Find all attacks in the current deck that meet the distance requirement (pass minRange, maxRange).
-    //             var validMoves = _availableAttackCard.FindAll(card => AttackCardDistanceCheck(card, distanceToPlayer));
-
-    //             // 2. If no moves are valid (with current distanceToPlayer)
-    //             // Reason: player was too close/far, enemy don't have melee/range attack card available.
-    //             if (validMoves.Count == 0)
-    //             {
-    //                 // If no melee card available, retreat from target to create more distanceToPlayer
-    //                 if (distanceToPlayer <= _meleeRange) return new RetreatCard();
-
-    //                 // If no range card available, approach target to reduce distanceToPlayer
-    //                 else if (distanceToPlayer > _meleeRange) return new ApproachCard();
-
-    //                 // I want the case enemy stand still too. Like he was waiting for his cooldown.
-    //                 // ... 
-    //             }
-
-    //             // 3. Pick from the VALID moves only
-    //             int index = _random.Next(validMoves.Count);
-    //             AttackCard selectedAttack = validMoves[index];
-
-    //             // 4. Remove the specific instance from the main deck
-    //             _availableAttackCard.Remove(selectedAttack);
-
-    //             return selectedAttack;
-    //         }
-
-    //         private void RefillDeck()
-    //         {
-    //             _availableAttackCard = new List<AttackCard>(_masterDeck.attackDeck);
-    //         }
-    //         #endregion
-
-    //         /// <summary>
-    //         /// distance check, ...
-    //         /// </summary>
-    //         /// <param name="card"></param>
-    //         /// <param name="distanceToPlayer"></param>
-    //         /// <returns></returns>
-    //         #region Other Logic (Should be move later)
-    //         private bool AttackCardDistanceCheck(BaseCard card, float distanceToPlayer)
-    //         {
-    //             if (card is AttackCard attackCard)
-    //                 return (attackCard.maxRange >= distanceToPlayer && attackCard.minRange <= distanceToPlayer);
-
-    //             return false;
-    //         }
-    //         #endregion
-
-    //     }
     public class EnemyAttackAI : MonoBehaviour
     {
-        [SerializeField] private Deck _masterDeck;
-        private List<AttackCard> _availableAttackCard = new();
+        // =============================== dependency ===============================
+        private Animator _animator;
+
+        // =============================== necessary var ===============================
+        public enum STRATEGY {ATTACK, APPROACH, RETREAT}
+        [SerializeField] private readonly List<EnemyAttackData> _attack;
+        private List<EnemyAttackData> _availableAttack;
         private readonly System.Random _random = new();
+
+        // =============================== temp var ===============================
         private float _meleeRange = 3f;
+
+        void Awake()
+        {
+            _animator = GetComponent<Animator>();
+        }
 
         void Start()
         {
-            RefillDeck();
+            RefillAttackList();
         }
 
-        /// <summary>
-        /// Draw next card, refill the deck when empty.
-        /// </summary>
-        /// <param name="distanceToPlayer"></param>
-        /// <returns></returns>
         #region Main Logic
-        public BaseCard GetNextValidAttackCard(float distanceToPlayer)
+        public STRATEGY Attack()
         {
-            if (_availableAttackCard.Count == 0) RefillDeck();
+            // tempo
+            float distanceToPlayer = -1f;
 
-            // 1. Find all attacks in the current deck that meet the distance requirement (pass minRange, maxRange).
-            var validMoves = _availableAttackCard.FindAll(card => AttackCardDistanceCheck(card, distanceToPlayer));
+            // 1. Choose next attack
+            EnemyAttackData currentAttack = ChooseNextAttack(distanceToPlayer);
 
-            // 2. If no moves are valid (with current distanceToPlayer)
-            // Reason: player was too close/far, enemy don't have melee/range attack card available.
-            if (validMoves.Count == 0)
+            // 2. If attack not available, approach or retreat from target.
+            if (currentAttack == null)
             {
-                // If no melee card available, retreat from target to create more distanceToPlayer
-                if (distanceToPlayer <= _meleeRange) return new RetreatCard();
+                // If no melee available, retreat from target to create more distanceToPlayer
+                if (distanceToPlayer <= _meleeRange) return STRATEGY.RETREAT;
 
-                // If no range card available, approach target to reduce distanceToPlayer
-                else if (distanceToPlayer > _meleeRange) return new ApproachCard();
+                // If no range available, approach target to reduce distanceToPlayer
+                else if (distanceToPlayer > _meleeRange) return STRATEGY.APPROACH;
 
                 // I want the case enemy stand still too. Like he was waiting for his cooldown.
                 // ... 
             }
 
-            // 3. Pick from the VALID moves only
-            int index = _random.Next(validMoves.Count);
-            AttackCard selectedAttack = validMoves[index];
+            // 3. If attack available, play the attack.
+            else
+            {
+                AnimatorOverrideController anim = new AnimatorOverrideController(_animator.runtimeAnimatorController);
+                _animator.runtimeAnimatorController = anim;
+                anim["DefaultAttack"] = currentAttack.clip;
+                _animator.CrossFade("Attack", 0.1f, 0, 0f);
+            }
 
-            // 4. Remove the specific instance from the main deck
-            _availableAttackCard.Remove(selectedAttack);
+            return STRATEGY.ATTACK;
+        }
+
+        private EnemyAttackData ChooseNextAttack(float distanceToPlayer)
+        {
+            if (_availableAttack.Count == 0) RefillAttackList();
+
+            // 1. Find all attacks in the current list that meet the distance requirement (pass minRange, maxRange).
+            var validMoves = _availableAttack.FindAll(move => AttackDistanceCheck(move, distanceToPlayer));
+
+            // 2. If no moves are valid (with current distanceToPlayer), return and said "attack not available".
+            // Reason: player was too close/far, enemy don't have melee/range attack available.
+            if (validMoves.Count == 0) return null;
+
+            // 3. Random the attack from the valid moves.
+            int index = _random.Next(validMoves.Count);
+            EnemyAttackData selectedAttack = validMoves[index];
+
+            // 4. Remove the chosen attack from the _availableAttack list.
+            _availableAttack.Remove(selectedAttack);
 
             return selectedAttack;
         }
 
-        private void RefillDeck()
+        private void RefillAttackList()
         {
-            _availableAttackCard = new List<AttackCard>(_masterDeck.attackDeck);
+            _availableAttack = new List<EnemyAttackData>(_attack);
         }
         #endregion
 
@@ -152,12 +110,9 @@ namespace Enemy
         /// <param name="distanceToPlayer"></param>
         /// <returns></returns>
         #region Other Logic (Should be move later)
-        private bool AttackCardDistanceCheck(BaseCard card, float distanceToPlayer)
+        private bool AttackDistanceCheck(EnemyAttackData move, float distanceToPlayer)
         {
-            if (card is AttackCard attackCard)
-                return (attackCard.maxRange >= distanceToPlayer && attackCard.minRange <= distanceToPlayer);
-
-            return false;
+            return (move.maxRange >= distanceToPlayer && move.minRange <= distanceToPlayer);
         }
         #endregion
 
