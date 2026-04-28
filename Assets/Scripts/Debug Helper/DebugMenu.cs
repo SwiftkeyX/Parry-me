@@ -21,7 +21,7 @@ using System.Collections.Generic;
 /// Look at DebugEntryKey for more info.
 /// 
 /// </summary>
-namespace DebugMenu
+namespace DebugHelper
 {
     [System.Serializable]
     public class DebugMenu

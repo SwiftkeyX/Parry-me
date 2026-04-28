@@ -1,15 +1,17 @@
-using DebugMenu;
+using DebugHelper;
 using Enemy;
-/// <summary>
-/// not reusable
-/// 
-/// Role?
-/// glue to use DebugMenu with Player
-/// </summary>
+using System.Collections.Generic;
+using UnityEngine;
+
 namespace Player
 {
     public class EnemyDebugList : BaseDebugList<EnemyStateMachine>
     {
+        private DebugMenu _debugDetection;
+
+        [Header("Enemy Specific Debug")]
+        [SerializeField] private List<DebugEntry> DebugDetectionInfo;
+
 
     }
 }

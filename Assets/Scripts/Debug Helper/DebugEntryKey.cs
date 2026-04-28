@@ -2,7 +2,7 @@
 /// use with DebugMenu.cs and DebugEntry.cs
 /// adjust the key as you need
 /// </summary>
-namespace DebugMenu
+namespace DebugHelper
 {
     public enum DebugEntryKEY
     {

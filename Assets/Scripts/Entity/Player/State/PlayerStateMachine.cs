@@ -67,8 +67,6 @@ namespace Player
         protected override void Awake()
         {
             base.Awake();
-
-            _bb = GetComponent<PlayerBlackBoard>();
         }
 
         /// <summary>

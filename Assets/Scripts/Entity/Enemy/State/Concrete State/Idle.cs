@@ -10,10 +10,12 @@ namespace Enemy
     public class Idle : BaseState<EnemyStateMachine>
     {
         private float _idleSpeed;
+        private EnemyDetection _detection;
 
-        public Idle(BaseStateMachineBlackBoard<EnemyStateMachine> bb, float moveSpeed = 0f) : base(bb)
+        public Idle(EnemyBlackBoard bb, float moveSpeed = 0f) : base(bb)
         {
             _idleSpeed = moveSpeed;
+            _detection = bb.EnemyDetection;
         }
 
         protected override void OnEnter()
@@ -61,8 +63,13 @@ namespace Enemy
             // //     _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.IDLE);
             // //     base.SwitchState();
             // // }
+            if (_detection.CanDetect && _stateMachine.AttackStrategy)
+            {
+                _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.ATTACK);
+                base.SwitchState();
+            }
 
-            if (_stateMachine.IsTargetFound && _stateMachine.IsAggressive)
+            else if (_detection.CanDetect && _stateMachine.IsAggressive)
             {
                 _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.CHASE);
                 base.SwitchState();

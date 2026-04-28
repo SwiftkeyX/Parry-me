@@ -70,7 +70,9 @@ namespace Player
                 _attackTimer = StartCoroutine(AttackTimer(_data[_comboNumber].attackTimer));
 
                 // play animation
-                _animator.runtimeAnimatorController = _data[_comboNumber].animOV;
+                AnimatorOverrideController anim = new AnimatorOverrideController(_animator.runtimeAnimatorController);
+                _animator.runtimeAnimatorController = anim;
+                anim["DefaultAttack"] = _data[_comboNumber].clip;
                 _animator.CrossFade("Attack", 0.1f, 0, 0f);
 
                 // update flag
@@ -111,7 +113,7 @@ namespace Player
     public class AttackBufferData
     {
         // over write previous attack animation
-        public AnimatorOverrideController animOV;
+        public AnimationClip clip;
 
         // time: use in logic that allow player to chain the attack (a1 => a2 => a3) 
         public float chainAttack;
@@ -119,9 +121,9 @@ namespace Player
         // time: use in same logic as "chainAttack"
         public float attackTimer;
 
-        public AttackBufferData(AnimatorOverrideController anim, float chain, float timer)
+        public AttackBufferData(AnimationClip clip, float chain, float timer)
         {
-            animOV = anim;
+            this.clip = clip;
             chainAttack = chain;
             attackTimer = timer;
         }

@@ -2,7 +2,7 @@
 /// <summary>
 /// Reusable
 /// </summary>
-namespace DebugMenu
+namespace DebugHelper
 {
     [System.Serializable]
     public class DebugEntry

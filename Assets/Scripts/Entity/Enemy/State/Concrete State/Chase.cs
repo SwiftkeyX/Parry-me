@@ -10,10 +10,12 @@ namespace Enemy
     public class Chase : BaseState<EnemyStateMachine>
     {
         private float _moveSpeed;
+        private EnemyDetection _detection;
 
-        public Chase(BaseStateMachineBlackBoard<EnemyStateMachine> bb, float moveSpeed) : base(bb)
+        public Chase(EnemyBlackBoard bb, float moveSpeed) : base(bb)
         {
             _moveSpeed = moveSpeed;
+            _detection = bb.EnemyDetection;
         }
 
         protected override void OnEnter()
@@ -32,37 +34,19 @@ namespace Enemy
 
         protected override void CheckSwitchState()
         {
-            // if (_stateMachine.IsTargetFound && _stateMachine.AttackStrategy)
+            // if (_detection.CanDetect && _stateMachine.AttackStrategy)
             // {
             //     _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.ATTACK);
             //     base.SwitchState();
             // }
 
-            // else if (_stateMachine.IsTargetFound && _stateMachine.IsAggressive)
-            // {
-            //     _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.CHASE);
-            //     base.SwitchState();
-            // }
+            if (_detection.CanDetect && _stateMachine.AttackStrategy)
+            {
+                _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.ATTACK);
+                base.SwitchState();
+            }
 
-            // else if (_stateMachine.IsTargetFound && !_stateMachine.IsAggressive)
-            // {
-            //     _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.OBSERVE);
-            //     base.SwitchState();
-            // }
-
-            // else if (!_stateMachine.IsTargetFound && _stateMachine.IsGuard)
-            // {
-            //     _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.PATROL);
-            //     base.SwitchState();
-            // }
-
-            // // else if (!_stateMachine.IsTargetFound && !_stateMachine.IsGuard)
-            // // {
-            // //     _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.IDLE);
-            // //     base.SwitchState();
-            // // }
-
-            if (!_stateMachine.IsTargetFound && !_stateMachine.IsGuard)
+            else if (!_detection.CanDetect)
             {
                 _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.IDLE);
                 base.SwitchState();

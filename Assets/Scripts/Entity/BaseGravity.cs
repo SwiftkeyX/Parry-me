@@ -1,5 +1,5 @@
 using UnityEngine;
-using DebugMenu;
+using DebugHelper;
 /// <summary>
 /// Reusable
 /// 

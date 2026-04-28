@@ -17,8 +17,11 @@ namespace Enemy
 {
     public class EnemyStateMachine : BaseStateMachine<EnemyStateMachine>
     {
-        // =========================================== necessary var ===========================================
-        // state instance
+        // ================================== dependency ==================================
+        private EnemyBlackBoard _bb { get { return (EnemyBlackBoard)base._baseBB; } }
+        private EnemyGravity _gravity { get { return (EnemyGravity)base._baseGravity; } }
+
+        // ================================== state instance ==================================
         public enum STATE { IDLE, CHASE, OBSERVE, PATROL, RETREAT, ATTACK }
         private BaseState<EnemyStateMachine> _idle;
         private BaseState<EnemyStateMachine> _chase;
@@ -33,26 +36,23 @@ namespace Enemy
         [SerializeField] private float _runSpeed = 6f;
 
         // ================================== state var ==================================
-        private bool _attackStrategy;
         private bool _isAggressive;
         private bool _isGuard;
-        private bool _isTargetFound;
 
         // =========================================== setter and getter ===========================================
         public float WalkSpeed { get { return _walkSpeed; } }
         public float RunSpeed { get { return _runSpeed; } }
-        public bool AttackStrategy { get { return _attackStrategy; } }
         public bool IsAggressive { get { return _isAggressive; } }
         public bool IsGuard { get { return _isGuard; } }
-        public bool IsTargetFound { get { return _isTargetFound; } }
+        
+        // tempolarily
+        public bool AttackStrategy = true;
 
         /// <summary>
         /// Initialize the dependency 
         /// </summary>
         protected override void Awake()
         {
-            // ...
-
             base.Awake();
         }
 
@@ -61,19 +61,17 @@ namespace Enemy
         /// </summary>
         protected override void Start()
         {
-            _idle = new Idle(_baseBB);
-            _chase = new Chase(_baseBB, _walkSpeed);
+            _idle = new Idle(_bb);
+            _chase = new Chase(_bb, _walkSpeed);
             // _observe = new Observe(_bb, _walkSpeed);
             // _patrol = new Patrol();
             // _retreat = new Retreat();
-            // _attack = new Attack(_bb);
+            _attack = new Attack(_bb);
             _currentState = _idle;
 
             // temporarily debug
-            _attackStrategy = false;
             _isAggressive = true;
             _isGuard = false;
-            _isTargetFound = true;
         }
 
         /// <summary>
@@ -84,7 +82,10 @@ namespace Enemy
             base.Update();
         }
 
-
+        /// <summary>
+        /// To get current state, change current state.
+        /// </summary>
+        /// <returns></returns>
         #region StateManagement
         public override BaseState<EnemyStateMachine> GetCurrentState()
         {

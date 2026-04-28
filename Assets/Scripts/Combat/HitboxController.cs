@@ -25,7 +25,7 @@ public class HitboxController : MonoBehaviour
         _data = new List<HitboxData>();
     }
 
-    public void EnableDisableHitbox(int currentAttack)
+    public void EnableDisableHitboxLogic(int currentAttack)
     {
         if (currentAttack < 0 || currentAttack >= _data.Count) return;
 

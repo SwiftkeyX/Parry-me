@@ -1,6 +1,6 @@
 using UnityEngine;
 using Player;
-using DebugMenu;
+using DebugHelper;
 /// <summary>
 /// Not Reusable
 /// 

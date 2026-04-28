@@ -14,7 +14,7 @@ namespace Player
 {
     public class PlayerAttackManager : MonoBehaviour
     {
-        [SerializeField] private List<AttackSO> _attackSO;
+        [SerializeField] private List<PlayerAttackData> _attackSO;
         private PlayerAttackBuffer _attackBuffer;
         private HitboxController _hitboxController;
 
@@ -35,23 +35,27 @@ namespace Player
             // injection
             for (int i = 0; i < _attackSO.Count; i++)
             {
-                AttackBufferData a = new AttackBufferData(_attackSO[i].animOV, _attackSO[i].chainAttack, _attackSO[i].attackTimer);
-                _attackBuffer.Data.Add(a);
+                AttackBufferData _ = new AttackBufferData(_attackSO[i].clip, _attackSO[i].chainAttack, _attackSO[i].attackTimer);
+                _attackBuffer.Data.Add(_);
             }
 
             // injection 2
             for (int i = 0; i < _attackSO.Count; i++)
             {
-                HitboxData a = new HitboxData(_attackSO[i].enableHitboxTime, _attackSO[i].disableHitboxTime);
-                _hitboxController.Data.Add(a);
+                HitboxData _ = new HitboxData(_attackSO[i].enableHitboxTime, _attackSO[i].disableHitboxTime);
+                _hitboxController.Data.Add(_);
             }
         }
 
         public void Attack(bool attackInput)
         {
-            // if successfully attack, mean character is using "currentAttack"
             bool chainAttackSuccess = false;
+
+            // Try buffer the attack
+            // I see even I got confused by this function => need more refactor 
             if (attackInput) chainAttackSuccess = _attackBuffer.Attack();
+
+            // If buffer the attack success, reset the hitbox
             if (chainAttackSuccess)
             {
                 currentAttack = _attackBuffer.ComboNumber - 1;
@@ -61,7 +65,7 @@ namespace Player
             }
 
             // tell hitboxController which attack we currently use
-            _hitboxController.EnableDisableHitbox(currentAttack);
+            _hitboxController.EnableDisableHitboxLogic(currentAttack);
         }
 
 

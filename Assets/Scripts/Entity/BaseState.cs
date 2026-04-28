@@ -1,4 +1,4 @@
-using DebugMenu;
+using DebugHelper;
 using UnityEngine;
 
 /// <summary>
