@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Enemy
 {
-    public class Attack : BaseState<EnemyStateMachine>
+    public class Attack : EnemyBaseState
     {
         private EnemyDetection _detection;
 
@@ -15,6 +15,9 @@ namespace Enemy
         protected override void OnEnter()
         {
             base.OnEnter();
+
+            // _animator.CrossFade("Attack", 0.1f, 0, 0f);
+            _animator.SetTrigger("AttackTrigger");
         }
 
         public override void OnUpdate()
@@ -25,7 +28,19 @@ namespace Enemy
 
         protected override void CheckSwitchState()
         {
-            if (_detection.CanDetect && _stateMachine.IsAggressive)
+            // Ask AI what should I do (attack, approach, retreat).
+            EnemyAttackAI.STRATEGY strategy = _attackAI.ShouldAttack();
+            bool isAttack = (strategy == EnemyAttackAI.STRATEGY.ATTACK);
+            bool isApproach = (strategy == EnemyAttackAI.STRATEGY.APPROACH);
+            bool isRetreat = (strategy == EnemyAttackAI.STRATEGY.RETREAT);
+
+            if (_detection.CanDetect && isAttack)
+            {
+                _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.ATTACK);
+                base.SwitchState();
+            }
+
+            else if (_detection.CanDetect && isApproach)
             {
                 _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.CHASE);
                 base.SwitchState();

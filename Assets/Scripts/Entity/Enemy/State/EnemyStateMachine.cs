@@ -36,18 +36,13 @@ namespace Enemy
         [SerializeField] private float _runSpeed = 6f;
 
         // ================================== state var ==================================
-        private bool _isAggressive;
         private bool _isGuard;
 
         // =========================================== setter and getter ===========================================
         public float WalkSpeed { get { return _walkSpeed; } }
         public float RunSpeed { get { return _runSpeed; } }
-        public bool IsAggressive { get { return _isAggressive; } }
         public bool IsGuard { get { return _isGuard; } }
         
-        // tempolarily
-        public bool AttackStrategy = true;
-
         /// <summary>
         /// Initialize the dependency 
         /// </summary>
@@ -70,7 +65,6 @@ namespace Enemy
             _currentState = _idle;
 
             // temporarily debug
-            _isAggressive = true;
             _isGuard = false;
         }
 

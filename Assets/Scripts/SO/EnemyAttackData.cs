@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[System.Serializable]
 [CreateAssetMenu(menuName = "Attack/EnemyAttackSO")]
 public class EnemyAttackData : AttackData
 {

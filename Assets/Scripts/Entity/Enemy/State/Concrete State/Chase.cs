@@ -7,7 +7,7 @@ using Entity;
 
 namespace Enemy
 {
-    public class Chase : BaseState<EnemyStateMachine>
+    public class Chase : EnemyBaseState
     {
         private float _moveSpeed;
         private EnemyDetection _detection;
@@ -34,19 +34,20 @@ namespace Enemy
 
         protected override void CheckSwitchState()
         {
-            // if (_detection.CanDetect && _stateMachine.AttackStrategy)
-            // {
-            //     _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.ATTACK);
-            //     base.SwitchState();
-            // }
+            // Ask AI what should I do (attack, approach, retreat).
+            EnemyAttackAI.STRATEGY strategy = _attackAI.ShouldAttack();
+            bool isAttack = (strategy == EnemyAttackAI.STRATEGY.ATTACK);
+            bool isApproach = (strategy == EnemyAttackAI.STRATEGY.APPROACH);
+            bool isRetreat = (strategy == EnemyAttackAI.STRATEGY.RETREAT);
 
-            if (_detection.CanDetect && _stateMachine.AttackStrategy)
+            if (_detection.CanDetect && isAttack)
             {
                 _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.ATTACK);
                 base.SwitchState();
             }
 
-            else if (!_detection.CanDetect)
+            // temporarily
+            else if (!_detection.CanDetect && isRetreat)
             {
                 _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.IDLE);
                 base.SwitchState();

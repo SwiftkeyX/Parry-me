@@ -7,7 +7,7 @@ using Entity;
 
 namespace Enemy
 {
-    public class Idle : BaseState<EnemyStateMachine>
+    public class Idle : EnemyBaseState
     {
         private float _idleSpeed;
         private EnemyDetection _detection;
@@ -34,42 +34,20 @@ namespace Enemy
 
         protected override void CheckSwitchState()
         {
-            // if (_stateMachine.IsTargetFound && _stateMachine.AttackStrategy)
-            // {
-            //     _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.ATTACK);
-            //     base.SwitchState();
-            // }
-
-            // else if (_stateMachine.IsTargetFound && _stateMachine.IsAggressive)
-            // {
-            //     _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.CHASE);
-            //     base.SwitchState();
-            // }
-
-            // else if (_stateMachine.IsTargetFound && !_stateMachine.IsAggressive)
-            // {
-            //     _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.OBSERVE);
-            //     base.SwitchState();
-            // }
-
-            // else if (!_stateMachine.IsTargetFound && _stateMachine.IsGuard)
-            // {
-            //     _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.PATROL);
-            //     base.SwitchState();
-            // }
-
-            // // else if (!_stateMachine.IsTargetFound && !_stateMachine.IsGuard)
-            // // {
-            // //     _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.IDLE);
-            // //     base.SwitchState();
-            // // }
-            if (_detection.CanDetect && _stateMachine.AttackStrategy)
+            // Ask AI what should I do (attack, approach, retreat).
+            EnemyAttackAI.STRATEGY strategy = _attackAI.ShouldAttack();
+            bool isAttack = (strategy == EnemyAttackAI.STRATEGY.ATTACK);
+            bool isApproach = (strategy == EnemyAttackAI.STRATEGY.APPROACH);
+            bool isRetreat = (strategy == EnemyAttackAI.STRATEGY.RETREAT);
+  
+            if (_detection.CanDetect && isAttack)
             {
+                _attackAI.Attack();
                 _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.ATTACK);
                 base.SwitchState();
             }
 
-            else if (_detection.CanDetect && _stateMachine.IsAggressive)
+            else if (_detection.CanDetect && isApproach)
             {
                 _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.CHASE);
                 base.SwitchState();

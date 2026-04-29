@@ -24,10 +24,11 @@ namespace Enemy
         private Animator _animator;
 
         // =============================== necessary var ===============================
-        public enum STRATEGY {ATTACK, APPROACH, RETREAT}
+        public enum STRATEGY { ATTACK, APPROACH, RETREAT }
         [SerializeField] private readonly List<EnemyAttackData> _attack;
         private List<EnemyAttackData> _availableAttack;
         private readonly System.Random _random = new();
+        private EnemyAttackData _currentAttack;
 
         // =============================== temp var ===============================
         private float _meleeRange = 3f;
@@ -43,16 +44,16 @@ namespace Enemy
         }
 
         #region Main Logic
-        public STRATEGY Attack()
+        public STRATEGY ShouldAttack()
         {
             // tempo
             float distanceToPlayer = -1f;
 
             // 1. Choose next attack
-            EnemyAttackData currentAttack = ChooseNextAttack(distanceToPlayer);
+            _currentAttack = ChooseNextAttack(distanceToPlayer);
 
             // 2. If attack not available, approach or retreat from target.
-            if (currentAttack == null)
+            if (_currentAttack == null)
             {
                 // If no melee available, retreat from target to create more distanceToPlayer
                 if (distanceToPlayer <= _meleeRange) return STRATEGY.RETREAT;
@@ -64,16 +65,20 @@ namespace Enemy
                 // ... 
             }
 
-            // 3. If attack available, play the attack.
-            else
-            {
-                AnimatorOverrideController anim = new AnimatorOverrideController(_animator.runtimeAnimatorController);
-                _animator.runtimeAnimatorController = anim;
-                anim["DefaultAttack"] = currentAttack.clip;
-                _animator.CrossFade("Attack", 0.1f, 0, 0f);
-            }
-
+            // 3. If attack available, return and said "I will attack".
             return STRATEGY.ATTACK;
+        }
+
+        public void Attack()
+        {
+            // Remove the chosen attack from the _availableAttack list.
+            _availableAttack.Remove(_currentAttack);
+
+            // Play animation
+            AnimatorOverrideController anim = new AnimatorOverrideController(_animator.runtimeAnimatorController);
+            _animator.runtimeAnimatorController = anim;
+            anim["DefaultAttack"] = _currentAttack.clip;
+            _animator.CrossFade("Attack", 0.1f, 0, 0f);
         }
 
         private EnemyAttackData ChooseNextAttack(float distanceToPlayer)
@@ -90,9 +95,6 @@ namespace Enemy
             // 3. Random the attack from the valid moves.
             int index = _random.Next(validMoves.Count);
             EnemyAttackData selectedAttack = validMoves[index];
-
-            // 4. Remove the chosen attack from the _availableAttack list.
-            _availableAttack.Remove(selectedAttack);
 
             return selectedAttack;
         }
