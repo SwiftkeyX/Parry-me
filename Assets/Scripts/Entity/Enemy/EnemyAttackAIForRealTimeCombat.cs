@@ -18,17 +18,18 @@ namespace Enemy
     /// How?
     /// ...
     /// </summary>
-    public class EnemyAttackAI : MonoBehaviour
+    public class EnemyAttackAIForRealTimeCombat : MonoBehaviour
     {
         // =============================== dependency ===============================
         private Animator _animator;
 
         // =============================== necessary var ===============================
         public enum STRATEGY { ATTACK, APPROACH, RETREAT }
-        [SerializeField] private readonly List<EnemyAttackData> _attack;
+        [SerializeField] private List<EnemyAttackData> _attack;
         private List<EnemyAttackData> _availableAttack;
         private readonly System.Random _random = new();
         private EnemyAttackData _currentAttack;
+        private AnimatorOverrideController _animOverride;
 
         // =============================== temp var ===============================
         private float _meleeRange = 3f;
@@ -36,6 +37,8 @@ namespace Enemy
         void Awake()
         {
             _animator = GetComponent<Animator>();
+            _animOverride = new AnimatorOverrideController(_animator.runtimeAnimatorController);
+            _animator.runtimeAnimatorController = _animOverride;
         }
 
         void Start()
@@ -47,7 +50,8 @@ namespace Enemy
         public STRATEGY ShouldAttack()
         {
             // tempo
-            float distanceToPlayer = -1f;
+            Transform player = GameObject.FindGameObjectWithTag("Player").transform;
+            float distanceToPlayer = Vector3.Distance(this.transform.position, player.position);
 
             // 1. Choose next attack
             _currentAttack = ChooseNextAttack(distanceToPlayer);
@@ -75,10 +79,7 @@ namespace Enemy
             _availableAttack.Remove(_currentAttack);
 
             // Play animation
-            AnimatorOverrideController anim = new AnimatorOverrideController(_animator.runtimeAnimatorController);
-            _animator.runtimeAnimatorController = anim;
-            anim["DefaultAttack"] = _currentAttack.clip;
-            _animator.CrossFade("Attack", 0.1f, 0, 0f);
+            _animOverride["DefaultAttack"] = _currentAttack.clip;
         }
 
         private EnemyAttackData ChooseNextAttack(float distanceToPlayer)
@@ -114,6 +115,7 @@ namespace Enemy
         #region Other Logic (Should be move later)
         private bool AttackDistanceCheck(EnemyAttackData move, float distanceToPlayer)
         {
+            Debug.Log("[EnemyAttackAI] move: " + move + " maxRange: " + move.maxRange + " minRange: " + move.minRange + " distanceToPlayer: " + distanceToPlayer);
             return (move.maxRange >= distanceToPlayer && move.minRange <= distanceToPlayer);
         }
         #endregion

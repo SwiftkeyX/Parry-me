@@ -7,18 +7,18 @@ namespace Enemy
     {
         // ========================== Dependency ==========================
         private EnemyDetection _enemyDetection;
-        private EnemyAttackAI _attackAI;
+        private EnemyAttackAIForRealTimeCombat _attackAI;
 
         // ========================== setter and getter ==========================
         public EnemyDetection EnemyDetection { get { return _enemyDetection; } }
-        public EnemyAttackAI AttackAI { get { return _attackAI; } }
+        public EnemyAttackAIForRealTimeCombat AttackAI { get { return _attackAI; } }
 
         protected override void Awake()
         {
             base.Awake();
 
             _enemyDetection = GetComponent<EnemyDetection>();
-            _attackAI = GetComponent<EnemyAttackAI>();
+            _attackAI = GetComponent<EnemyAttackAIForRealTimeCombat>();
         }
     }
 }

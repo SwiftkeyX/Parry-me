@@ -226,7 +226,7 @@ PrefabInstance:
       addedObject: {fileID: 1694375278}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 695b8514bb4002d4f98cd673e6e3527f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1694375279}
+      addedObject: {fileID: 1694375281}
   m_SourcePrefab: {fileID: 100100000, guid: 695b8514bb4002d4f98cd673e6e3527f, type: 3}
 --- !u!1 &58824232
 GameObject:
@@ -2748,7 +2748,6 @@ MonoBehaviour:
   _baseBB: {fileID: 1694375273}
   _walkSpeed: 3
   _runSpeed: 6
-  AttackStrategy: 1
 --- !u!114 &1694375275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2789,7 +2788,7 @@ MonoBehaviour:
     value: 0
   DebugStateInfo:
   - key: 6
-    value: 0
+    value: 1
   DebugCollisionInfo:
   - key: 7
     value: 0
@@ -2809,7 +2808,7 @@ MonoBehaviour:
   _detectionRange: 8
   _detectionAngleRange: 90
   _gizmoOn: 0
---- !u!114 &1694375279
+--- !u!114 &1694375281
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2821,14 +2820,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ccebc88d6cbdaf419581cf191ac15ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _masterDeck:
-    attackDeck:
-    - {fileID: 0}
-    - {fileID: 0}
-    retreatDeck:
-    - {fileID: 0}
-    approachDeck:
-    - {fileID: 0}
+  _attack:
+  - {fileID: 11400000, guid: e59eedb04e3b9f5478f3fe69d15ced2a, type: 2}
+  - {fileID: 11400000, guid: 96847f62e973ed24e940f17d7773fa01, type: 2}
+  - {fileID: 11400000, guid: b4a679571c5d6c941915133bf1821449, type: 2}
+  - {fileID: 11400000, guid: 9632e2c3b7ec4794d87ec7b12b24648f, type: 2}
 --- !u!1 &1702063126
 GameObject:
   m_ObjectHideFlags: 0

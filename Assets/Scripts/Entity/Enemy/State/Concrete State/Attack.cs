@@ -16,7 +16,6 @@ namespace Enemy
         {
             base.OnEnter();
 
-            // _animator.CrossFade("Attack", 0.1f, 0, 0f);
             _animator.SetTrigger("AttackTrigger");
         }
 
@@ -29,10 +28,10 @@ namespace Enemy
         protected override void CheckSwitchState()
         {
             // Ask AI what should I do (attack, approach, retreat).
-            EnemyAttackAI.STRATEGY strategy = _attackAI.ShouldAttack();
-            bool isAttack = (strategy == EnemyAttackAI.STRATEGY.ATTACK);
-            bool isApproach = (strategy == EnemyAttackAI.STRATEGY.APPROACH);
-            bool isRetreat = (strategy == EnemyAttackAI.STRATEGY.RETREAT);
+            EnemyAttackAIForRealTimeCombat.STRATEGY strategy = _attackAI.ShouldAttack();
+            bool isAttack = (strategy == EnemyAttackAIForRealTimeCombat.STRATEGY.ATTACK);
+            bool isApproach = (strategy == EnemyAttackAIForRealTimeCombat.STRATEGY.APPROACH);
+            bool isRetreat = (strategy == EnemyAttackAIForRealTimeCombat.STRATEGY.RETREAT);
 
             if (_detection.CanDetect && isAttack)
             {
