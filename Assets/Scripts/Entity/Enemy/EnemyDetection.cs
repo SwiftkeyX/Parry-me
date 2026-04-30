@@ -18,7 +18,11 @@ namespace Enemy
         private GameObject _target;
         [SerializeField] private float _detectionRange = 5f;
         [SerializeField] private float _detectionAngleRange = 90;
+        [SerializeField] private float _deAggroRange = 8f; // Slightly larger than detection
+        private bool _hasDetectedTarget = false;
         private bool _canDetect;
+
+        // =============================== gizmo ===============================
         [SerializeField] private bool _gizmoOn = true;
 
         // =============================== setter and getter ===============================
@@ -37,31 +41,38 @@ namespace Enemy
         void Update()
         {
             IsTargetDetect();
-
-            // Debug.Log("[EnemyDetection] can detect: " + _canDetect);
         }
 
-        void IsTargetDetect()
+        private void IsTargetDetect()
         {
             float distanceToTarget = Vector3.Distance(this.transform.position, _target.transform.position);
-            // Debug.Log("[EnemyDetection] distanceToTarget: " + distanceToTarget);
 
-            // distance check
-            if (distanceToTarget <= _detectionRange)
+            // PHASE 1: SEARCHING TARGET (Vision Cone)
+            if (!_hasDetectedTarget)
             {
-                Vector3 directionToTarget = (_target.transform.position - this.transform.position);
-                float angleToTarget = Vector3.Angle(this.transform.forward, directionToTarget);
-                // Debug.Log("[EnemyDetection] forward : " + this.transform.forward + " directionToTarget: " + directionToTarget);
-                // Debug.Log("[EnemyDetection] angleToTarget: " + angleToTarget);
-
-                // Is target in vision cone's angle
-                if (angleToTarget <= _detectionAngleRange / 2f)
+                if (distanceToTarget <= _detectionRange)
                 {
-                    _canDetect = true;
-                    return;
+                    Vector3 directionToTarget = (_target.transform.position - this.transform.position).normalized;
+                    float angleToTarget = Vector3.Angle(this.transform.forward, directionToTarget);
+
+                    if (angleToTarget <= _detectionAngleRange / 2f)
+                    {
+                        _hasDetectedTarget = true;
+                    }
                 }
             }
-            _canDetect = false;
+
+            // PHASE 2: PURSUIT TARGET (Ignore Vision Cone. Check De-aggro Distance)
+            else
+            {
+                if (distanceToTarget > _deAggroRange)
+                {
+                    _hasDetectedTarget = false; // Lost the target (Player ran away)
+                }
+            }
+
+            // Export the result to the property used by other scripts
+            _canDetect = _hasDetectedTarget;
         }
 
         /// <summary>
@@ -70,9 +81,9 @@ namespace Enemy
         private void OnDrawGizmosSelected()
         {
             if (!_gizmoOn) return;
-            
+
             // draw red sphere around enemy
-            Gizmos.color = Color.red;  
+            Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, _detectionRange);
 
             Vector3 leftRayDirection = Quaternion.Euler(0, 0, -_detectionAngleRange / 2) * transform.forward;

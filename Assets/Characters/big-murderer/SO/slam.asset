@@ -17,4 +17,4 @@ MonoBehaviour:
   enableHitboxTime: 0
   disableHitboxTime: 0
   minRange: 0
-  maxRange: 5
+  maxRange: 2

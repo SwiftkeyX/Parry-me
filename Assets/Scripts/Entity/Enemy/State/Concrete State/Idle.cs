@@ -40,11 +40,8 @@ namespace Enemy
             bool isApproach = (strategy == EnemyAttackAIForRealTimeCombat.STRATEGY.APPROACH);
             bool isRetreat = (strategy == EnemyAttackAIForRealTimeCombat.STRATEGY.RETREAT);
 
-            Debug.Log("Detection: " + _detection.CanDetect + " Strategy: " + strategy);
-
             if (_detection.CanDetect && isAttack)
             {
-                _attackAI.Attack();
                 _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.ATTACK);
                 base.SwitchState();
             }

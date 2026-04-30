@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace Enemy
@@ -7,13 +8,8 @@ namespace Enemy
     /// Reusable
     /// 
     /// Role?
-    /// This class return the "Card" class, which card played determined the behavior of the enemy.
-    /// If Deck return AttackCard => enemy enter attack state.
-    /// If Deck return RetreatCard => enemy enter retreat state.
-    /// If Deck return ApproachCard => enemy enter chase state.
+    /// ...
     /// 
-    /// What?
-    /// "Deck" class is the combination of the "Card" class.
     /// 
     /// How?
     /// ...
@@ -24,12 +20,19 @@ namespace Enemy
         private Animator _animator;
 
         // =============================== necessary var ===============================
-        public enum STRATEGY { ATTACK, APPROACH, RETREAT }
+        public enum STRATEGY { ATTACK, APPROACH, RETREAT, WAIT }
         [SerializeField] private List<EnemyAttackData> _attack;
         private List<EnemyAttackData> _availableAttack;
         private readonly System.Random _random = new();
+        private STRATEGY _currentStrategy;
         private EnemyAttackData _currentAttack;
         private AnimatorOverrideController _animOverride;
+        private float _distanceToPlayer;
+
+        // =============================== debug var ===============================
+        [Header("DebugMode")]
+        [SerializeField] private bool _debugMode;
+        [SerializeField] private TextMeshProUGUI _debugTextUI;
 
         // =============================== temp var ===============================
         private float _meleeRange = 3f;
@@ -44,35 +47,53 @@ namespace Enemy
         void Start()
         {
             RefillAttackList();
+            TurnOnDebugUI();
+        }
+
+        void LateUpdate()
+        {
+            UpdateDebugTextVisuallyInTheScene();
         }
 
         #region Main Logic
+        /// <summary>
+        /// AI think if I should attack
+        /// </summary>
+        /// <returns>STRATEGY</returns> for the statemachine. Statemachine use STRATEGY for state's transition
         public STRATEGY ShouldAttack()
         {
+            if (CanISkipCurrentAnimation() == false) return STRATEGY.WAIT;
+
             // tempo
             Transform player = GameObject.FindGameObjectWithTag("Player").transform;
-            float distanceToPlayer = Vector3.Distance(this.transform.position, player.position);
+            _distanceToPlayer = Vector3.Distance(this.transform.position, player.position);
 
             // 1. Choose next attack
-            _currentAttack = ChooseNextAttack(distanceToPlayer);
+            _currentAttack = ChooseNextAttack(_distanceToPlayer);
 
             // 2. If attack not available, approach or retreat from target.
             if (_currentAttack == null)
             {
                 // If no melee available, retreat from target to create more distanceToPlayer
-                if (distanceToPlayer <= _meleeRange) return STRATEGY.RETREAT;
+                if (_distanceToPlayer <= _meleeRange) _currentStrategy = STRATEGY.RETREAT;
 
                 // If no range available, approach target to reduce distanceToPlayer
-                else if (distanceToPlayer > _meleeRange) return STRATEGY.APPROACH;
+                else if (_distanceToPlayer > _meleeRange) _currentStrategy = STRATEGY.APPROACH;
 
                 // I want the case enemy stand still too. Like he was waiting for his cooldown.
                 // ... 
             }
 
             // 3. If attack available, return and said "I will attack".
-            return STRATEGY.ATTACK;
+            _currentStrategy = STRATEGY.ATTACK;
+
+            // 4. Return
+            return _currentStrategy;
         }
 
+        /// <summary>
+        /// Override the animator (so later we can play correct animation), Delete the selected attack from the available attack list
+        /// </summary>
         public void Attack()
         {
             // Remove the chosen attack from the _availableAttack list.
@@ -82,6 +103,11 @@ namespace Enemy
             _animOverride["DefaultAttack"] = _currentAttack.clip;
         }
 
+        /// <summary>
+        /// Choose next attack based on the available attack list and distanceToPlayer.
+        /// </summary>
+        /// <param name="distanceToPlayer"></param>
+        /// <returns></returns>
         private EnemyAttackData ChooseNextAttack(float distanceToPlayer)
         {
             if (_availableAttack.Count == 0) RefillAttackList();
@@ -100,9 +126,28 @@ namespace Enemy
             return selectedAttack;
         }
 
+        /// <summary>
+        /// After enemy attack for a while, the available attack list should be delete each time to empty. Refill the list.
+        /// </summary>
         private void RefillAttackList()
         {
             _availableAttack = new List<EnemyAttackData>(_attack);
+        }
+
+        private bool CanISkipCurrentAnimation()
+        {
+            AnimatorStateInfo _ = _animator.GetCurrentAnimatorStateInfo(0);
+            bool isInAttack = _.IsTag("Attack");
+            bool isNotInTransition = !_animator.IsInTransition(0);
+            bool isAttackFinish = _.normalizedTime >= 1f;
+
+            // 1. not in attack state, can skip animation => return true.
+            if (!isInAttack && isNotInTransition) return true;
+
+            // 2. in attack state, can't skip attack animation => wait until attack is finished => return true.
+            if (isInAttack && isAttackFinish && isNotInTransition) return true;
+
+            return false;
         }
         #endregion
 
@@ -112,14 +157,39 @@ namespace Enemy
         /// <param name="card"></param>
         /// <param name="distanceToPlayer"></param>
         /// <returns></returns>
-        #region Other Logic (Should be move later)
+        #region Other Logic (Should be move to other script later)
         private bool AttackDistanceCheck(EnemyAttackData move, float distanceToPlayer)
         {
-            Debug.Log("[EnemyAttackAI] move: " + move + " maxRange: " + move.maxRange + " minRange: " + move.minRange + " distanceToPlayer: " + distanceToPlayer);
             return (move.maxRange >= distanceToPlayer && move.minRange <= distanceToPlayer);
         }
         #endregion
 
+        /// <summary>
+        /// Debug current strategy, current attack visually in the scene.
+        /// </summary>
+        #region Debug
+        private void UpdateDebugTextVisuallyInTheScene()
+        {
+            if (!_debugMode || _debugTextUI == null) return;
+
+            string attackName = _currentAttack != null ? _currentAttack.name : "None";
+
+            _debugTextUI.text = $"<color=yellow>Strategy:</color> {_currentStrategy}\n" +
+                               $"<color=cyan>Distance To Player:</color> {_distanceToPlayer:F2}\n" +
+                               $"<color=red>Queued Attack:</color> {attackName}\n" +
+                               $"<color=white>Pool Count:</color> {_availableAttack.Count}";
+        }
+
+        /// <summary>
+        /// turn on/off TMP (text mesh pro) depend on script's debug mode
+        /// </summary>
+        private void TurnOnDebugUI()
+        {
+            _debugTextUI.enabled = _debugMode;
+        }
+
+
+        #endregion
     }
 
 }

@@ -16,6 +16,8 @@ namespace Enemy
         {
             base.OnEnter();
 
+            _attackAI.Attack();
+
             _animator.SetTrigger("AttackTrigger");
         }
 
@@ -32,6 +34,9 @@ namespace Enemy
             bool isAttack = (strategy == EnemyAttackAIForRealTimeCombat.STRATEGY.ATTACK);
             bool isApproach = (strategy == EnemyAttackAIForRealTimeCombat.STRATEGY.APPROACH);
             bool isRetreat = (strategy == EnemyAttackAIForRealTimeCombat.STRATEGY.RETREAT);
+            bool isWait = (strategy == EnemyAttackAIForRealTimeCombat.STRATEGY.WAIT);
+
+            if (isWait) return;
 
             if (_detection.CanDetect && isAttack)
             {
@@ -45,7 +50,7 @@ namespace Enemy
                 base.SwitchState();
             }
 
-            else if (!_detection.CanDetect)
+            else if (!_detection.CanDetect && isRetreat)
             {
                 _stateMachine.ChangeCurrentState(EnemyStateMachine.STATE.IDLE);
                 base.SwitchState();
