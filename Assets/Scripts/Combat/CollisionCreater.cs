@@ -13,7 +13,7 @@ using UnityEngine;
 /// </summary>
 public class CollisionCreater : MonoBehaviour
 {
-    [SerializeField] private TEAM _team;
+    [SerializeField] private TEAM _myTeam;
     private Collider _collider;
 
     void Awake()
@@ -29,10 +29,11 @@ public class CollisionCreater : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         GameObject target = other.gameObject;
-        IDamageble targetStat = target.GetComponent<IDamageble>();
+        IDamageable targetStat = target.GetComponent<IDamageable>();
+        ITeam targetTeam = target.GetComponent<ITeam>();
 
         // can't hit the same team
-        if (targetStat.GetTeam() == _team) return;
+        if (targetTeam.GetTEAM() == _myTeam) return;
 
         targetStat.GetHit(10f);
     }

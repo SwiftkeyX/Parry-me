@@ -1,0 +1,4 @@
+interface ITeam
+{
+    TEAM GetTEAM();
+}

@@ -1,26 +1,9 @@
-using UnityEngine;
+using Entity;
 
-public class PlayerStat : MonoBehaviour, IDamageble
+namespace Player
 {
-    [SerializeField] private float _health = 100f;
-    [SerializeField] private float _maxHealth = 100f;
-    [SerializeField] private float _baseAttack = 10f;
-    [SerializeField] private Healthbar _healthbar;
-    [SerializeField] private TEAM _team;
-
-    void Start()
+    public class PlayerStat : BaseStat
     {
-        _healthbar.InitialHealthbar(_maxHealth);
-    }
 
-    public void GetHit(float dmg)
-    {
-        _health -= dmg;
-        _healthbar.SetCurrentHealth(_health);
-    }
-
-    public TEAM GetTeam()
-    {
-        return _team;
     }
 }
