@@ -15,7 +15,7 @@ using UnityEngine;
 /// </summary>
 namespace Enemy
 {
-    public class EnemyStateMachine : BaseStateMachine<EnemyStateMachine>
+    public class EnemyStateMachine : BaseStateMachine<EnemyStateMachine>, IMoveableForSideScroller
     {
         // ================================== dependency ==================================
         private EnemyBlackBoard _bb { get { return (EnemyBlackBoard)base._baseBB; } }
@@ -31,6 +31,7 @@ namespace Enemy
         private BaseState<EnemyStateMachine> _attack;
 
         // ================================== movement setting ==================================
+        // maybe delete Movement setting later ?
         [Header("Movement State")]
         [SerializeField] private float _walkSpeed = 3f;
         [SerializeField] private float _runSpeed = 6f;
@@ -42,7 +43,7 @@ namespace Enemy
         public float WalkSpeed { get { return _walkSpeed; } }
         public float RunSpeed { get { return _runSpeed; } }
         public bool IsGuard { get { return _isGuard; } }
-        
+
         /// <summary>
         /// Initialize the dependency 
         /// </summary>
@@ -74,6 +75,11 @@ namespace Enemy
         protected override void Update()
         {
             base.Update();
+        }
+
+        void LateUpdate()
+        {
+            ((IMoveableForSideScroller)this).KeepCharacterInZAxis(this.transform);
         }
 
         /// <summary>

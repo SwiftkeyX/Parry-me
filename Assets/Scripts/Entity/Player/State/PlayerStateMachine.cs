@@ -18,7 +18,7 @@ using Entity;
 
 namespace Player
 {
-    public class PlayerStateMachine : BaseStateMachine<PlayerStateMachine>, IJumpable
+    public class PlayerStateMachine : BaseStateMachine<PlayerStateMachine>, IJumpable, IMoveableForSideScroller
     {
         // ================================== dependency =================================
         public PlayerBlackBoard _bb { get { return (PlayerBlackBoard)base._baseBB; } set { base._baseBB = value; } }
@@ -91,6 +91,11 @@ namespace Player
             base.Update();
         }
 
+        void LateUpdate()
+        {
+            ((IMoveableForSideScroller)this).KeepCharacterInZAxis(this.transform);
+        }
+
         #region StateManagement
         public override BaseState<PlayerStateMachine> GetCurrentState()
         {
@@ -112,6 +117,5 @@ namespace Player
             base.ChangeCurrentState(targetState);
         }
         #endregion
-
     }
 }
